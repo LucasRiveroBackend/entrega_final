@@ -14,6 +14,11 @@ export default class ProductManager {
 
          const index = products.findIndex(product => product.id === id);
          if (index !== -1) {
+            // Verificar si el ID ha sido modificado
+            if (updatedFields.hasOwnProperty('id') && updatedFields.id !== id) {
+               return 'El ID no puede ser modificado';
+            }
+
             const updatedProduct = { ...products[index], ...updatedFields };
 
             products[index] = updatedProduct;
@@ -82,7 +87,6 @@ export default class ProductManager {
             return 'Not found';
          }
       } catch (error) {
-         console.log('Id sin producto2')
          console.error('Error en getProductById:', error);
          throw error;
       }
