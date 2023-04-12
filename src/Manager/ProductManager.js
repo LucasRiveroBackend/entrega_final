@@ -93,8 +93,9 @@ export default class ProductManager {
    }
 
    // agrego los productos
-   addProduct = async (title, description, price, thumbnail, code, stock) => {
+   addProduct = async (productInfo) => {
       try {
+         const {title, description, price, thumbnail, code, stock, category} = productInfo
          let productsMaxId = await this.getProducts();
          let maxId = 0
 
@@ -104,7 +105,7 @@ export default class ProductManager {
             }
          }
 
-         if (!title || !description || !price || !thumbnail || !code || !stock) {
+         if (!title || !description || !price || !code || !stock || !category) {
             return 'Todos los campos son obligatorios';
          }
          let codeExist = await this.findCode(code);
@@ -120,7 +121,9 @@ export default class ProductManager {
             thumbnail: thumbnail,
             code: code,
             stock: stock,
-            id: ++maxId
+            id: ++maxId,
+            category: category,
+            status: true
          }
 
          this.products.push(product);

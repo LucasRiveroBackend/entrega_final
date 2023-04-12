@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Segunda entrega curso node.js",
-  "main": "index.js",
+  "main": "./app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/LucasRivero01/entrega_2#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22"
   }
 }

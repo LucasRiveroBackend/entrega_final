@@ -1,12 +1,13 @@
 [
 	{
-		"title": "producto prueba1",
-		"description": "Este es un producto prueba 1",
-		"price": 200,
+		"title": "producto prueba update",
+		"description": "Este es un producto prueba",
+		"price": 500,
 		"thumbnail": "Sin imagen",
-		"code": "1001",
+		"code": 1010,
 		"stock": 25,
-		"id": 1
+		"id": 1,
+		"category": "categoria 1"
 	},
 	{
 		"title": "producto prueba2",
@@ -88,5 +89,36 @@
 		"code": "1010",
 		"stock": 25,
 		"id": 10
+	},
+	{
+		"title": "producto prueba5000",
+		"description": "Este es un producto prueba",
+		"price": 500,
+		"thumbnail": "Sin imagen",
+		"code": 1010,
+		"stock": 25,
+		"id": 11
+	},
+	{
+		"title": "producto prueba6000",
+		"description": "Este es un producto prueba 6000",
+		"price": 500,
+		"thumbnail": "Sin imagen",
+		"code": 1020,
+		"stock": 25,
+		"id": 12,
+		"category": "categoria 1",
+		"status": true
+	},
+	{
+		"title": "producto prueba6000",
+		"description": "Este es un producto prueba 6000",
+		"price": 500,
+		"thumbnail": "Sin imagen",
+		"code": 1030,
+		"stock": 25,
+		"id": 13,
+		"category": "categoria 1",
+		"status": true
 	}
 ]
