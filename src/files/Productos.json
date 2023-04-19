@@ -120,5 +120,16 @@
 		"id": 13,
 		"category": "categoria 1",
 		"status": true
+	},
+	{
+		"title": "producto f",
+		"description": "producto f",
+		"price": "10000",
+		"thumbnail": "",
+		"code": "123123123",
+		"stock": "1000",
+		"id": 14,
+		"category": "10",
+		"status": true
 	}
 ]

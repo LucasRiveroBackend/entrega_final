@@ -26,10 +26,20 @@ const server = app.listen(PORT, () => {
 const socketServerIO = new Server(server);
 
 socketServerIO.on("connection", async (socket) => {
-  const productos = await manager.getProducts();
   console.log("cliente conectado");
+  
+  const productos = await manager.getProducts();
+  socketServerIO.emit('log', productos);
 
-  socket.on("message", data =>{
-    socketServerIO.emit('log', productos)
-  })
+  socket.on("message", async (nuevoProducto) => {
+    nuevoProducto = await manager.addProduct(nuevoProducto);
+    const productos = await manager.getProducts();
+    socketServerIO.emit('log', productos);
+  });
+
+  socket.on("eliminar", async (id) => {
+    await manager.deleteProduct(id);
+    const productos = await manager.getProducts();
+    socketServerIO.emit('log', productos);
+  });
 });
