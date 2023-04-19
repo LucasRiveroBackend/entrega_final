@@ -1,16 +1,35 @@
 import express from "express";
-import productRouter from './routes/products.router.js';
-import cartRouter from './routes/carts.router.js';
+import handlebars from "express-handlebars";
+import { Server } from "socket.io";
+import __dirname from "./utils.js";
+import viewRouter from "./routes/view.router.js";
+import realTimeProducts from "./routes/realTimeProducts.js";
+import ProductsManagar from "./Manager/productManager.js";
+const manager = new ProductsManagar();
 const PORT = 8080;
-
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
+app.use(express.static(__dirname + "/public"));
 
-app.listen(PORT, ()=>{
-    console.log('Servidor funcionando en el puerto: ' + PORT)
-})
+app.engine("handlebars", handlebars.engine());
+app.set("views", __dirname + "/views");
+app.set("view engine", "handlebars");
 
+app.use("/", viewRouter);
+app.use("/realtimeproducts", realTimeProducts);
 
-app.use('/api/products', productRouter);
-app.use('/api/carts', cartRouter);
+const server = app.listen(PORT, () => {
+  console.log("Servidor funcionando en el puerto: " + PORT);
+});
+
+const socketServerIO = new Server(server);
+
+socketServerIO.on("connection", async (socket) => {
+  const productos = await manager.getProducts();
+  console.log("cliente conectado");
+
+  socket.on("message", data =>{
+    socketServerIO.emit('log', productos)
+  })
+});
