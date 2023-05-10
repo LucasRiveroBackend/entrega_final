@@ -1,11 +1,13 @@
 import { Router } from 'express';
-import CartManager from '../Manager/CartManager.js';
+//import CartManager from '../Manager/CartManager.js';
+import CartManager from '../Manager/CartManagerMDB.js';
 const cartManager = new CartManager();
 const router = Router();
 
 router.post('/', async (req,res)=>{
    const cart = req.body;
-   const resultado = await cartManager.addCarts(cart)
+   const resultado = await cartManager.addCarts(cart);
+
    if(resultado){
       return res.send({
          producto:resultado,

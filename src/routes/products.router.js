@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import ProductManager from '../Manager/productManager.js';
+//import ProductManager from '../Manager/productManager.js';
+import ProductManager from '../Manager/productManagerMDB.js';
 const productManager = new ProductManager();
 const router = Router();
 
@@ -51,12 +52,9 @@ router.post('/', async (req,res)=>{
 })
 
 router.put('/:pid', async (req,res)=>{
-   console.log('req.params.id: ', req.params.pid)
    const id = req.params.pid;
-   const product = req.body;
-   
+   const product = req.body; 
    const parseId = parseInt(id);
-   console.log('parseId: ', parseId)
    const resultado = await productManager.updateProduct(parseId, product)
    if(resultado){
       return res.send({

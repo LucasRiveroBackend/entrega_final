@@ -104,17 +104,6 @@
 		"description": "Este es un producto prueba 6000",
 		"price": 500,
 		"thumbnail": "Sin imagen",
-		"code": 1020,
-		"stock": 25,
-		"id": 12,
-		"category": "categoria 1",
-		"status": true
-	},
-	{
-		"title": "producto prueba6000",
-		"description": "Este es un producto prueba 6000",
-		"price": 500,
-		"thumbnail": "Sin imagen",
 		"code": 1030,
 		"stock": 25,
 		"id": 13,
