@@ -79,7 +79,7 @@ Swal.fire({
     toast: true 
 }).then(result =>{
     user  = result.value;
-let usario = {
+let usuario = {
     user: user,
     origin: front
 }
