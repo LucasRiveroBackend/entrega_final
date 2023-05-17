@@ -6,7 +6,7 @@ const router = Router();
 router.get("/", async (req, res) => {
   const message = req.body;
   const resultado = await messageManager.addMessage(message);
-  console.log('llego')
+
   if(resultado){
      return res.send({
         message:resultado,

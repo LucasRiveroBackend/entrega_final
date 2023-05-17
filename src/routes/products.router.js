@@ -5,35 +5,33 @@ const productManager = new ProductManager();
 const router = Router();
 
 router.get('/', async (req,res)=>{
+   
    const limitString = req.query.limit;
-   const limit = parseInt(limitString);
+   const pageString = req.query.page;
+   const category = req.query.category;
+   const stockString = req.query.stock;
+   const sort = req.query.sort
+   
+   let limit = parseInt(limitString);
+   let page = parseInt(pageString);
+   const stock = parseInt(stockString);
 
-   const products = await productManager.getProducts();
-   if(!limit){
-      return res.send({
-         productos: products
-      })
+   if (!limit || Number.isNaN(limit)){
+      limit = 10;
    }
-   if (Number.isNaN(limit)){
-      return res.send({
-         error: 'El limite debe ser numérico'
-      })
+   if (!page || Number.isNaN(page)){
+      page = 1;
    }
-   let productsLimit = products.slice(0, limit );
+   const products = await productManager.getProducts(limit, page, category, stock, sort);
+   console.log()
    return res.send({
-       productos: productsLimit
+       productos: products
    })
 })
 
 router.get('/:pid', async (req, res)=>{
    const idString = req.params.pid
-   const id = parseInt(idString);
-   if (Number.isNaN(id)){
-      return res.send({
-         error: 'El id debe ser numérico'
-      })
-   }
-   const product = await productManager.getProductById(id);
+   const product = await productManager.getProductById(idString);
    if (product){
       return res.send({
          producto: product
@@ -54,8 +52,7 @@ router.post('/', async (req,res)=>{
 router.put('/:pid', async (req,res)=>{
    const id = req.params.pid;
    const product = req.body; 
-   const parseId = parseInt(id);
-   const resultado = await productManager.updateProduct(parseId, product)
+   const resultado = await productManager.updateProduct(id, product)
    if(resultado){
       return res.send({
          producto:resultado,
@@ -65,8 +62,7 @@ router.put('/:pid', async (req,res)=>{
 
 router.delete('/:pid', async (req,res)=>{
    const id = req.params.pid;   
-   const parseId = parseInt(id);
-   const resultado = await productManager.deleteProduct(parseId)
+   const resultado = await productManager.deleteProduct(id)
    if(resultado){
       return res.send({
          producto:resultado,

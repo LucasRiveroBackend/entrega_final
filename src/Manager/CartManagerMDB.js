@@ -12,9 +12,6 @@ export default class CartsManager {
       try {
          let cartsMaxId = await this.getCarts();
          let maxId = 0
-         let idProduct = 0;
-         let quantity = 0
-
          for (let i = 0; i < cartsMaxId.length; i++) {
             if (cartsMaxId[i].id > maxId) {
                maxId = cartsMaxId[i].id;
@@ -24,10 +21,6 @@ export default class CartsManager {
          let cart = {
             id: ++maxId,
             products: [
-               // {
-               //    idProduct: idProduct,
-               //    quantity: quantity
-               // }
             ]
          }
 
@@ -52,10 +45,10 @@ export default class CartsManager {
 
    getCartsById = async (id) => {
       try {
-         const result = await cartModel.find({id:id});
+         const result = await cartModel.find({_id:id});
          return result;
       } catch (error) {
-         console.error('Error en getCarts:', error);
+         console.error('Error en getCartsById:', error);
          throw error;
       }
    }
@@ -63,7 +56,7 @@ export default class CartsManager {
    addProductInCart = async (idCart, idProd) => {
       try {
         const carts = await this.getCartsById(idCart);
-        const cart = carts.find((cart) => cart.id == idCart);
+        const cart = carts.find((cart) => cart._id == idCart);
         let productInCart = cart.products;
         const prodIndex = productInCart.findIndex((product) => product.idProduct == idProd);
     
@@ -73,14 +66,14 @@ export default class CartsManager {
         } else {
           // Si el producto no existe, agregarlo al arreglo
           let producto = {
-            idProduct: idProd,
+            _id: idProd,
             quantity: 1
           };
           productInCart.push(producto);
         }
     
         // Actualizar el arreglo de productos en el carrito utilizando el operador $inc
-        await cartModel.updateOne({ id: idCart }, { "products": productInCart });
+        await cartModel.updateOne({ _id: idCart }, { "products": productInCart });
     
         return cart;
       } catch (error) {
@@ -89,34 +82,76 @@ export default class CartsManager {
       }
     }
 
-   // addProductInCart = async (idCart, idProd) => {
-   //    try {
-   //      const carts = await this.getCartsById(idCart);
-   //      const cart = carts.find((cart) => cart.id == idCart);
-   //      let productInCart = cart.products;
-   //      const prodIndex = productInCart.findIndex((product) => product.idProduct == idProd);
+    deleteProductInCart = async (idCart, idProd) => {
+      try {
+        const carts = await this.getCartsById(idCart);
+        const cart = carts.find((cart) => cart._id == idCart);
+        let productInCart = cart.products;
+        const filteredProducts = productInCart.filter((product) => product.idProduct != idProd);
+        await cartModel.updateOne({ _id: idCart }, { "products": filteredProducts });
+        const cartsUpdate = await this.getCartsById(idCart);
+        return cartsUpdate;
+      } catch (error) {
+        console.error('Error en deleteProductInCart:', error);
+        throw error;
+      }
+    }
+
+    deleteCart = async (idCart) => {
+      try {
+        await cartModel.deleteOne({ _id: idCart });
+        const cartsUpdate = await this.getCartsById(idCart);
+        return cartsUpdate;
+      } catch (error) {
+        console.error('Error en deleteCart:', error);
+        throw error;
+      }
+    }
+
+    updateManyCart = async (idCart,prod) => {
+      try {
+         let cart = {
+            _id: idCart,
+            products: prod
+         }
+
+        await cartModel.insertMany(cart)
+        return cart;
+      } catch (error) {
+        console.error('Error en updateManyCart:', error);
+        throw error;
+      }
+    }
+
+    updateQuantity = async (idCart, idProd, quantity) => {
+      try {
+        const carts = await this.getCartsById(idCart);
+        const cart = carts.find((cart) => cart._id == idCart);
+        let productInCart = cart.products;
+        const prodIndex = productInCart.findIndex((product) => product._id == idProd);
     
-   //      if (prodIndex !== -1) {
-   //        // Si el producto ya existe, incrementar la cantidad en 1
-   //        productInCart[prodIndex].quantity++;
-   //      } else {
-   //        // Si el producto no existe, agregarlo al arreglo
-   //        let producto = {
-   //          idProduct: idProd,
-   //          quantity: 1
-   //        };
-   //        productInCart.push(producto);
-   //      }
+        if (prodIndex !== -1) {
+          // Si el producto ya existe, incrementar la cantidad en quantity
+          productInCart[prodIndex].quantity += quantity;
+        } else {
+          // Si el producto no existe, agregarlo al arreglo
+          let producto = {
+            _id: idProd,
+            quantity: quantity
+          };
+          productInCart.push(producto);
+        }
     
-   //      // Actualizar el arreglo de productos en el carrito utilizando el operador $set
-   //      await cartModel.updateOne({ id: idCart, "products.idProduct": idProd }, { $set: { "products.$.quantity": productInCart[prodIndex].quantity } });
+        // Actualizar el arreglo de productos en el carrito utilizando el operador $inc
+        await cartModel.updateOne({ _id: idCart }, { "products": productInCart });
     
-   //      return cart;
-   //    } catch (error) {
-   //      console.error('Error en addProductInCart:', error);
-   //      throw error;
-   //    }
-   //  }
+        return cart;
+      } catch (error) {
+        console.error('Error en updateQuantity:', error);
+        throw error;
+      }
+    }
+
 
    write = async (cart) => {
       try {

@@ -1,0 +1,21 @@
+<div>
+  <h1>Web socket</h1>
+  {{#each productos.products}}
+    <h5>titulo: {{this.title}}</h5>
+    <h5>descripcion: {{this.description}}</h5>
+    <h5>precio: {{this.price}}</h5>
+    <h5>thumbnail:{{this.thumbnail}}</h5>
+    <h5>code: {{this.code}}</h5>
+    <h5>stock: {{this.stock}}</h5>
+    <h5>status: {{this.status}}</h5>
+    <h5>category: {{this.category}}</h5>
+    <button onclick="Agregar('{{this._id}}')">Agregar al carrito</button>
+    <br />
+  {{/each}}
+  {{#if productos.hasPrevPage}}
+    <a href="{{productos.prevLink}}"><button>Anterior</button></a>
+  {{/if}}
+  {{#if productos.hasNextPage}}
+    <a href="{{productos.nextLink}}"><button>Siguiente</button></a>
+  {{/if}}
+</div>

@@ -1,5 +1,4 @@
 import { Router } from 'express';
-//import CartManager from '../Manager/CartManager.js';
 import CartManager from '../Manager/CartManagerMDB.js';
 const cartManager = new CartManager();
 const router = Router();
@@ -46,12 +45,48 @@ router.post("/:cid/product/:pid", async (req, res) => {
 })
 
 router.get("/:cid", async (req, res) => {
-   const carts = await cartManager.getCarts();
-   const id = parseInt(req.params.cid);
-   let productFind = carts.find((cart) => cart.id === id);
+   const id = req.params.cid;
+   const carts = await cartManager.getCartsById(id);
    res.send({
-      cart:productFind
+      cart:carts
    });
 })
 
+router.delete('/:cid/product/:pid', async (req,res)=>{
+   const idCart = req.params.cid;
+   const idProd = req.params.pid;
+   const resultado = await cartManager.deleteProductInCart(idCart, idProd);
+   return res.send({
+      carts: resultado
+  })
+})
+
+router.delete('/:cid', async (req,res)=>{
+   const idCart = req.params.cid;
+   const resultado = await cartManager.deleteCart(idCart);
+   return res.send({
+      carts: resultado
+  })
+})
+
+router.put('/:cid', async (req,res)=>{
+   const idCart = req.params.cid;
+   const products = req.body;
+   const resultado = await cartManager.updateManyCart(idCart, products);
+   return res.send({
+      carts: resultado
+   })
+})
+
+router.put('/:cid/product/:pid', async (req,res)=>{
+   const idCart = req.params.cid;
+   const idProd = req.params.pid;
+   const quantityString = req.body.quantity;
+   const quantity = parseInt(quantityString);
+   const resultado = await cartManager.updateQuantity(idCart, idProd, quantity);
+   return res.send({
+      carts: resultado
+   })
+})
+ 
 export default router;
