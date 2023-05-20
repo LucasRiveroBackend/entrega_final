@@ -12,9 +12,9 @@ router.get("/", async (req, res) => {
 
 router.get("/products/:cid", async (req, res) => {
   const idCart = req.params.cid;
-  const products = await cartManager.getCartsById(idCart);
-  console.log('products: ', products)
-  res.render("products", { products });
+  const carts = await cartManager.getCartsById(idCart);
+  console.log('carts: ', JSON.stringify(carts, null, "\t"));
+  res.render("productsById",  { carts} );
 });
 
 router.get("/products", async (req, res) => {

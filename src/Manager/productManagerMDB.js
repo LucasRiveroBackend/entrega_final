@@ -146,7 +146,7 @@ export default class ProductManager {
       // el producto, si no existe retorno null
       let product
       if (products.products.length > 0) {
-         product = products.find(product => product.code === code)
+         product = [...products.products].find(product => product.code === code);
       }
 
       if (product) {

@@ -1,5 +1,6 @@
 <div>
   <h1>Web socket</h1>
+  <form id="productsForm">
   {{#each productos.products}}
     <h5>titulo: {{this.title}}</h5>
     <h5>descripcion: {{this.description}}</h5>
@@ -9,9 +10,11 @@
     <h5>stock: {{this.stock}}</h5>
     <h5>status: {{this.status}}</h5>
     <h5>category: {{this.category}}</h5>
-    <button onclick="Agregar('{{this._id}}')">Agregar al carrito</button>
+    <input type="hidden" name="productId" value="{{this._id}}">
+    <input type="submit">
     <br />
   {{/each}}
+  </form>
   {{#if productos.hasPrevPage}}
     <a href="{{productos.prevLink}}"><button>Anterior</button></a>
   {{/if}}
@@ -19,3 +22,6 @@
     <a href="{{productos.nextLink}}"><button>Siguiente</button></a>
   {{/if}}
 </div>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/carts.js"></script>

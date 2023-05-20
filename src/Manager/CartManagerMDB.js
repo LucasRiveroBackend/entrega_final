@@ -45,7 +45,7 @@ export default class CartsManager {
 
    getCartsById = async (id) => {
       try {
-         const result = await cartModel.find({_id:id});
+         const result = await cartModel.find({id:id}).lean();
          return result;
       } catch (error) {
          console.error('Error en getCartsById:', error);
@@ -58,7 +58,7 @@ export default class CartsManager {
         const carts = await this.getCartsById(idCart);
         const cart = carts.find((cart) => cart._id == idCart);
         let productInCart = cart.products;
-        const prodIndex = productInCart.findIndex((product) => product.idProduct == idProd);
+        const prodIndex = productInCart.findIndex((product) => product._id == idProd);
     
         if (prodIndex !== -1) {
           // Si el producto ya existe, incrementar la cantidad en 1

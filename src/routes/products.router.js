@@ -23,7 +23,6 @@ router.get('/', async (req,res)=>{
       page = 1;
    }
    const products = await productManager.getProducts(limit, page, category, stock, sort);
-   console.log()
    return res.send({
        productos: products
    })

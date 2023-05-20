@@ -1,14 +1,16 @@
 import express from "express";
 import mongoose from "mongoose";
 import handlebars from "express-handlebars";
+import { Server } from "socket.io";
 import productRouter from './routes/products.router.js';
 import cartRouter from './routes/carts.router.js';
-import { Server } from "socket.io";
 import __dirname from "./utils.js";
 import viewRouter from "./routes/view.router.js";
 import realTimeProducts from "./routes/realTimeProducts.js";
 import MessageManager from "./Manager/MessageManagerMDB.js";
 import ProductsManagar from "./Manager/productManager.js";
+import cartModel from "./Dao/models/carts.js";
+import productModel from "./Dao/models/carts.js";
 
 const manager = new ProductsManagar();
 const PORT = 8080;
@@ -32,26 +34,6 @@ const server = app.listen(PORT, () => {
   console.log("Servidor funcionando en el puerto: " + PORT);
 });
 
-// const socketServerIO = new Server(server);
-
-// socketServerIO.on("connection", async (socket) => {
-//   console.log("cliente conectado");
-  
-//   const productos = await manager.getProducts();
-//   socketServerIO.emit('log', productos);
-
-//   socket.on("message", async (nuevoProducto) => {
-//     nuevoProducto = await manager.addProduct(nuevoProducto);
-//     const productos = await manager.getProducts();
-//     socketServerIO.emit('log', productos);
-//   });
-
-//   socket.on("eliminar", async (id) => {
-//     await manager.deleteProduct(id);
-//     const productos = await manager.getProducts();
-//     socketServerIO.emit('log', productos);
-//   });
-// });
 
 //Chat socket.io
 const messageManager = new MessageManager();
