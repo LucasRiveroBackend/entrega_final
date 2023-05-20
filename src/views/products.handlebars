@@ -1,6 +1,8 @@
 <div>
-  <h1>Web socket</h1>
+  
+  <h1>Productos</h1>
   <form id="productsForm">
+    <label id="cartIdLabel"></label> <!-- Elemento para mostrar el cartId -->
   {{#each productos.products}}
     <h5>titulo: {{this.title}}</h5>
     <h5>descripcion: {{this.description}}</h5>

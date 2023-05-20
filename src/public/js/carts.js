@@ -6,7 +6,8 @@ let productId;
 
 form.addEventListener('submit', e => {
    e.preventDefault();
-
+   const cartIdLabel = document.getElementById('cartIdLabel');
+   cartIdLabel.textContent = `Cart ID: ${cartId}`;
    const data = new FormData(form);
 
    const obj = {};
@@ -26,7 +27,8 @@ form.addEventListener('submit', e => {
          }
      }).then(responseData => {
          cartId = responseData.producto._id; // Access the _id property
-  
+         const cartIdLabel = document.getElementById('cartIdLabel');
+         cartIdLabel.textContent = `Cart ID: ${cartId}`;
          // Use the cartId as needed
          console.log('CART ID:', cartId);
 
@@ -34,6 +36,8 @@ form.addEventListener('submit', e => {
          sendProductRequest(obj);
      });
    } else {
+      const cartIdLabel = document.getElementById('cartIdLabel');
+      cartIdLabel.textContent = `Cart ID: ${cartId}`;
       sendProductRequest(obj);
    }
 });
@@ -67,7 +71,8 @@ function sendProductRequest(obj) {
 
 // Obtener el cartId almacenado en localStorage si existe
 cartId = localStorage.getItem('cartId');
-
+const cartIdLabel = document.getElementById('cartIdLabel');
+cartIdLabel.textContent = `Cart ID: ${cartId}`;
 if (!cartId) {
    // Si no hay cartId almacenado, hacer una petición para crear el carrito
    fetch('/api/carts', {
@@ -82,6 +87,8 @@ if (!cartId) {
    }).then(responseData => {
       cartId = responseData.producto._id;
       localStorage.setItem('cartId', cartId);
+      const cartIdLabel = document.getElementById('cartIdLabel');
+      cartIdLabel.textContent = `Cart ID: ${cartId}`;
    });
 }
 

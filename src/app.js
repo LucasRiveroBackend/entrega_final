@@ -9,8 +9,8 @@ import viewRouter from "./routes/view.router.js";
 import realTimeProducts from "./routes/realTimeProducts.js";
 import MessageManager from "./Manager/MessageManagerMDB.js";
 import ProductsManagar from "./Manager/productManager.js";
-import cartModel from "./Dao/models/carts.js";
-import productModel from "./Dao/models/carts.js";
+import cartModel from "./Dao/models/cart.js";
+import productModel from "./Dao/models/cart.js";
 
 const manager = new ProductsManagar();
 const PORT = 8080;

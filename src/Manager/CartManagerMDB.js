@@ -1,4 +1,4 @@
-import cartModel from '../Dao/models/carts.js';
+import cartModel from '../Dao/models/cart.js';
 import ProductManager from './productManager.js';
 
 export default class CartsManager {
@@ -35,7 +35,7 @@ export default class CartsManager {
 
    getCarts = async () => {
       try {
-         const result = await cartModel.find();
+         const result = await cartModel.find().populate('products.product');
          return result;
       } catch (error) {
          console.error('Error en getCarts:', error);
@@ -45,7 +45,7 @@ export default class CartsManager {
 
    getCartsById = async (id) => {
       try {
-         const result = await cartModel.find({id:id}).lean();
+         const result = await cartModel.find({_id:id}).lean();
          return result;
       } catch (error) {
          console.error('Error en getCartsById:', error);
@@ -57,6 +57,7 @@ export default class CartsManager {
       try {
         const carts = await this.getCartsById(idCart);
         const cart = carts.find((cart) => cart._id == idCart);
+        console.log('cart: ', cart)
         let productInCart = cart.products;
         const prodIndex = productInCart.findIndex((product) => product._id == idProd);
     

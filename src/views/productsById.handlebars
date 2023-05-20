@@ -1,13 +1,5 @@
-{{!-- <h1>Products By Cart ID: {{cartId}}</h1>
-<ul>
-  {{#each productos}}
-  <li>
-    Product ID: Quantity: {{this.productos.quantity}}
-  </li>
-  {{/each}}
-</ul> --}}
 {{#each carts}}
-  <h3>Cart ID: {{this.id}}</h3>
+  <h3>Cart ID: {{this._id}}</h3>
   <ul>
     {{#each this.products}}
       <li>
