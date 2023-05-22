@@ -7,7 +7,7 @@ import CartManager from '../Manager/CartManagerMDB.js';
 const cartManager = new CartManager();
 
 const publicAcces = (req,res,next) =>{
-  if(req.session.user) return res.redirect('/profile');
+  if(req.session.user) return res.redirect('/products');
   next();
 }
 
@@ -23,7 +23,6 @@ router.get("/", privateAcces, async (req, res) => {
 router.get("/products/:cid", privateAcces,  async (req, res) => {
   const idCart = req.params.cid;
   const carts = await cartManager.getCartsById(idCart);
-  console.log('carts: ', JSON.stringify(carts, null, "\t"));
   res.render("productsById",  { carts} );
 });
 

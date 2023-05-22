@@ -9,14 +9,14 @@
   <form id="productsForm">
     <label id="cartIdLabel"></label> <!-- Elemento para mostrar el cartId -->
   {{#each productos.products}}
-    <h5>titulo: {{this.title}}</h5>
-    <h5>descripcion: {{this.description}}</h5>
-    <h5>precio: {{this.price}}</h5>
-    <h5>thumbnail:{{this.thumbnail}}</h5>
-    <h5>code: {{this.code}}</h5>
-    <h5>stock: {{this.stock}}</h5>
-    <h5>status: {{this.status}}</h5>
-    <h5>category: {{this.category}}</h5>
+    <h5><strong>Titulo:</strong> {{this.title}}</h5>
+    <h5><strong>Descripcion:</strong> {{this.description}}</h5>
+    <h5><strong>Precio:</strong> {{this.price}}</h5>
+    <h5><strong>Thumbnail:</strong>{{this.thumbnail}}</h5>
+    <h5><strong>Code:</strong> {{this.code}}</h5>
+    <h5><strong>Stock:</strong> {{this.stock}}</h5>
+    <h5><strong>Status:</strong> {{this.status}}</h5>
+    <h5><strong>Category:</strong> {{this.category}}</h5>
     <input type="hidden" name="productId" value="{{this._id}}">
     <input type="submit">
     <br />
