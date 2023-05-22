@@ -1,11 +1,14 @@
 import express from "express";
-import mongoose from "mongoose";
+import session from 'express-session';
+import mongoose from 'mongoose';
+import MongoStore from 'connect-mongo';
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import productRouter from './routes/products.router.js';
 import cartRouter from './routes/carts.router.js';
 import __dirname from "./utils.js";
 import viewRouter from "./routes/view.router.js";
+import sessionsRouter from './routes/sessions.router.js';
 import realTimeProducts from "./routes/realTimeProducts.js";
 import MessageManager from "./Manager/MessageManagerMDB.js";
 import ProductsManagar from "./Manager/productManager.js";
@@ -24,11 +27,20 @@ app.use(express.static(__dirname + "/public"));
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
-
+app.use(session({
+  store: new MongoStore({
+      mongoUrl: MONGO,
+      ttl:36000
+  }),
+  secret:'CoderSecret',
+  resave:false,
+  saveUninitialized:false
+}))
 app.use("/", viewRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/products', productRouter);
 app.use("/realtimeproducts", realTimeProducts);
+app.use('/api/session', sessionsRouter);
 
 const server = app.listen(PORT, () => {
   console.log("Servidor funcionando en el puerto: " + PORT);

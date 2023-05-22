@@ -1,23 +1,33 @@
 
 import { Router } from "express";
-
 import ProductManager from '../Manager/productManagerMDB.js';
 const router = Router();
 const productManager = new ProductManager();
 import CartManager from '../Manager/CartManagerMDB.js';
 const cartManager = new CartManager();
-router.get("/", async (req, res) => {
+
+const publicAcces = (req,res,next) =>{
+  if(req.session.user) return res.redirect('/profile');
+  next();
+}
+
+const privateAcces = (req,res,next)=>{
+  if(!req.session.user) return res.redirect('/login');
+  next();
+}
+
+router.get("/", privateAcces, async (req, res) => {
   res.render("chat");
 });
 
-router.get("/products/:cid", async (req, res) => {
+router.get("/products/:cid", privateAcces,  async (req, res) => {
   const idCart = req.params.cid;
   const carts = await cartManager.getCartsById(idCart);
   console.log('carts: ', JSON.stringify(carts, null, "\t"));
   res.render("productsById",  { carts} );
 });
 
-router.get("/products", async (req, res) => {
+router.get("/products", privateAcces, async (req, res) => {
   const limitString = req.query.limit;
   const pageString = req.query.page;
   const category = req.query.category;
@@ -35,6 +45,21 @@ router.get("/products", async (req, res) => {
     page = 1;
   }
   const products = await productManager.getProducts(limit, page, category, stock, sort);
-  res.render("products", { productos: products });
-});
+  res.render("products", { productos: products, user: req.session.user });
+}); 
+
+router.get('/register', publicAcces, (req,res)=>{
+    res.render('register')
+})
+
+router.get('/login', publicAcces, (req,res)=>{
+    res.render('login')
+})
+
+router.get('/profile', privateAcces ,(req,res)=>{
+    res.render('profile',{
+        user: req.session.user
+    })
+})
+
 export default router;

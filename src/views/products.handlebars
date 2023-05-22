@@ -1,5 +1,10 @@
 <div>
-  
+  <div>
+    <h1>Bienvenido {{user.name}}, usted tiene rol de: {{user.rol}}</h1>
+
+    <a href="/api/session/logout"><button>Salir</button></a>
+  </div>
+</div>
   <h1>Productos</h1>
   <form id="productsForm">
     <label id="cartIdLabel"></label> <!-- Elemento para mostrar el cartId -->
@@ -24,6 +29,6 @@
     <a href="{{productos.nextLink}}"><button>Siguiente</button></a>
   {{/if}}
 </div>
-
+<br>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/carts.js"></script>
