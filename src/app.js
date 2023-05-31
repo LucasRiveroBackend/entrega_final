@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import MongoStore from 'connect-mongo';
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
+import passport from 'passport';
+
 import productRouter from './routes/products.router.js';
 import cartRouter from './routes/carts.router.js';
 import __dirname from "./utils.js";
@@ -14,6 +16,7 @@ import MessageManager from "./Manager/MessageManagerMDB.js";
 import ProductsManagar from "./Manager/productManager.js";
 import cartModel from "./Dao/models/cart.js";
 import productModel from "./Dao/models/cart.js";
+import initializePassport from './config/passport.config.js';
 
 const manager = new ProductsManagar();
 const PORT = 8080;
@@ -36,6 +39,9 @@ app.use(session({
   resave:false,
   saveUninitialized:false
 }))
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 app.use("/", viewRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/products', productRouter);

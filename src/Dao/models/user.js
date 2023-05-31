@@ -8,12 +8,9 @@ const schema = new mongoose.Schema({
     email:String,
     age:Number,
     password:String,
-    rol: {
-      type: String,
-      default: 'usuario'
-  }
 })
 
 const userModel = mongoose.model(collection, schema);
 
 export default userModel;
+
