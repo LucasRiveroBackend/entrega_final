@@ -44,7 +44,6 @@ router.get("/products", privateAcces, async (req, res) => {
     page = 1;
   }
   const products = await productManager.getProducts(limit, page, category, stock, sort);
-  console.log('req.session.user: ', req.session.user) 
   res.render("products", { productos: products, user: req.session.user });
 }); 
 

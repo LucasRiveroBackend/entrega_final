@@ -88,5 +88,14 @@ router.put('/:cid/product/:pid', async (req,res)=>{
       carts: resultado
    })
 })
- 
+
+router.put('/:cid/user/:pid', async (req,res)=>{
+   const idCart = req.params.cid;
+   const idUser = req.params.pid;
+   const resultado = await cartManager.addCartInUser(idCart, idUser);
+   return res.send({
+      carts: resultado
+   })
+})
+
 export default router;

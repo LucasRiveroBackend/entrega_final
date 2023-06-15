@@ -8,6 +8,17 @@ const schema = new mongoose.Schema({
     email:String,
     age:Number,
     password:String,
+    cart: {
+        type: [
+          {
+            cart: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref:"carts"
+            }
+          }
+        ],
+        default: []
+    }
 })
 
 const userModel = mongoose.model(collection, schema);

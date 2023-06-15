@@ -154,7 +154,6 @@ export default class CartsManager {
     }
   }
 
-
   write = async (cart) => {
     try {
       await fs.writeFileSync(this.path, JSON.stringify(cart, null, '\t'))

@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import userModel from '../Dao/models/user.js';
-import { createHash } from '../utils.js';
 import passport from 'passport';
 
 const router = Router();
@@ -16,12 +15,35 @@ router.get('/failregister', async (req,res)=>{
 
 router.post('/login', passport.authenticate('login',{failureRedirect:'/faillogin'}), async (req,res)=>{
     if(!req.user) return res.status(400).send({status:"error", error: 'Invalid credentials'});
+    const cartId = req.body.cartId; 
     req.session.user = {
+        id: req.user._id,
         name : req.user.firs_name,
         name: req.user.last_name,
         age: req.user.age,
-        email: req.user.email
+        email: req.user.email,
+        cart: cartId
     }
+
+    const users = await userModel.findById(req.session.user.id);
+    const user = users
+    if (user) {
+        const cartInUsers = user.cart;
+        const cartExists = cartInUsers.some((cart) => cart._id == cartId);
+      
+        if (cartExists) {
+          console.log('Ya existe');
+        } else {
+          const cart = {
+            _id: cartId
+          };
+          cartInUsers.push(cart);
+          await userModel.updateOne({ _id: req.session.user.id }, { "cart": cartInUsers });
+        }
+      } else {
+        console.log('Usuario no encontrado');
+      }
+    const update = await userModel.findById(req.session.user.id).populate('cart.cart');
     res.send({status:"success", payload:req.user, message:"Primer logueo!!"})
 })
 
