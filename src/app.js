@@ -17,10 +17,11 @@ import ProductsManagar from "./Manager/productManager.js";
 import cartModel from "./Dao/models/cart.js";
 import productModel from "./Dao/models/cart.js";
 import initializePassport from './config/passport.config.js';
+import { config } from "./config/config.js";
 
 const manager = new ProductsManagar();
-const PORT = 8080;
-const MONGO = 'mongodb+srv://Resumenes:Resumenes@cluster0.fbw6l.mongodb.net/ecommerce?authSource=admin&replicaSet=atlas-8qggok-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true'
+const PORT = config.server.port;
+const MONGO = config.mongo.url;
 const app = express();
 const connection = mongoose.connect(MONGO);
 app.use(express.json());
