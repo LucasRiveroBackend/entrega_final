@@ -6,22 +6,21 @@ import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import passport from 'passport';
 
-import productRouter from './routes/products.router.js';
-import cartRouter from './routes/carts.router.js';
+import productRouter from './router/products.routes.js';
+import cartRouter from './router/carts.routes.js';
 import __dirname from "./utils.js";
-import viewRouter from "./routes/view.router.js";
-import sessionsRouter from './routes/sessions.router.js';
-import realTimeProducts from "./routes/realTimeProducts.js";
-import MessageManager from "./Manager/MessageManagerMDB.js";
-import ProductsManagar from "./Manager/productManager.js";
-import cartModel from "./Dao/models/cart.js";
-import productModel from "./Dao/models/cart.js";
+import viewRouter from "./router/view.routes.js";
+import sessionsRouter from './router/sessions.routes.js';
+import realTimeProducts from "./router/realTimeProducts.routes.js";
+import MessageManager from "./Dao/manager/MessageManagerMDB.js";
+import ProductsManagar from "./Dao/manager/productManager.js";
 import initializePassport from './config/passport.config.js';
 import { config } from "./config/config.js";
 
-const manager = new ProductsManagar();
+// const manager = new ProductsManagar();
 const PORT = config.server.port;
 const MONGO = config.mongo.url;
+const SECRET = config.server.secret;
 const app = express();
 const connection = mongoose.connect(MONGO);
 app.use(express.json());
@@ -36,7 +35,7 @@ app.use(session({
       mongoUrl: MONGO,
       ttl:36000
   }),
-  secret:'CoderSecret',
+  secret:SECRET,
   resave:false,
   saveUninitialized:false
 }))

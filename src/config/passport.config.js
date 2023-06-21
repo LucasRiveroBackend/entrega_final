@@ -1,8 +1,9 @@
 import passport from 'passport';
 import local from 'passport-local';
-import userService from '../Dao/models/user.js';
+import userService from '../Dao/models/user.model.js';
 import GitHubStrategy from 'passport-github2';
 import { createHash, validatePassword } from '../utils.js';
+import { config } from "./config.js";
 //import userModel from '../models/User.model.js';
 
 const LocalStrategy = local.Strategy;
@@ -61,9 +62,9 @@ const initializePassport = () => {
 
     passport.use('github', new GitHubStrategy({
         // riveroLucasCarrito
-        clientID:'Iv1.65417a11e06184ac',
-        clientSecret:'ff28cecdccd249ec6ec79a91c51d3ac3027963c0',
-        callbackURL:'http://localhost:8080/api/session/githubcallback'
+        clientID: config.github.clientID,
+        clientSecret: config.github.clientSecret,
+        callbackURL: config.github.callBackUrl
     }, async (accesToken, refreshToken, profile, done)=>{
         try {
             console.log(profile); //vemos la info que nos da GitHub

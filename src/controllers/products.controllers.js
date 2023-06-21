@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import ProductManager from '../Manager/productManagerMDB.js';
-const productManager = new ProductManager();
-const router = Router();
+import ProductManager from "../Dao/manager/productManagerMDB.js";
+import ProductModel from "../Dao/models/products.model.js";
 
-router.get('/', async (req,res)=>{
+const productManager = new ProductManager(ProductModel);
+
+export const getProducts = async (req,res)=>{
    
    const limitString = req.query.limit;
    const pageString = req.query.page;
@@ -25,9 +25,9 @@ router.get('/', async (req,res)=>{
    return res.send({
        productos: products
    })
-})
+}
 
-router.get('/:pid', async (req, res)=>{
+export const getProduct = async (req, res)=>{
    const idString = req.params.pid
    const product = await productManager.getProductById(idString);
    if (product){
@@ -35,9 +35,9 @@ router.get('/:pid', async (req, res)=>{
          producto: product
       })
    }
-})
+}
 
-router.post('/', async (req,res)=>{
+export const addProduct = async (req,res)=>{
    const product = req.body;
    const resultado = await productManager.addProduct(product)
    if(resultado){
@@ -45,9 +45,9 @@ router.post('/', async (req,res)=>{
          producto:resultado,
       })
    }
-})
+}
 
-router.put('/:pid', async (req,res)=>{
+export const updateProduct = async (req,res)=>{
    const id = req.params.pid;
    const product = req.body; 
    const resultado = await productManager.updateProduct(id, product)
@@ -56,9 +56,9 @@ router.put('/:pid', async (req,res)=>{
          producto:resultado,
       })
    }
-})
+}
 
-router.delete('/:pid', async (req,res)=>{
+export const deleteProduct = async (req,res)=>{
    const id = req.params.pid;   
    const resultado = await productManager.deleteProduct(id)
    if(resultado){
@@ -66,6 +66,4 @@ router.delete('/:pid', async (req,res)=>{
          producto:resultado,
       })
    }
-})
-
-export default router;
+}

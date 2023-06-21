@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import CartManager from '../Manager/CartManagerMDB.js';
-const cartManager = new CartManager();
-const router = Router();
+import CartManager  from "../Dao/manager/CartManagerMDB.js";
+import CartModel  from "../Dao/models/cart.model.js";
 
-router.post('/', async (req,res)=>{
+const cartManager = new CartManager(CartModel);
+
+export const addCart = async (req,res)=>{
    const cart = req.body;
    const resultado = await cartManager.addCarts(cart);
 
@@ -12,9 +12,9 @@ router.post('/', async (req,res)=>{
          producto:resultado,
       })
    }
-})
+}
 
-router.get('/', async (req,res)=>{
+export const getCarts = async (req,res)=>{
    const limitString = req.query.limit;
    const limit = parseInt(limitString);
 
@@ -33,52 +33,52 @@ router.get('/', async (req,res)=>{
    return res.send({
        carts: cartsLimit
    })
-})
+}
 
-router.post("/:cid/product/:pid", async (req, res) => {
+export const addProductInCart = async (req, res) => {
    const idCart = req.params.cid;
    const idProd = req.params.pid;
    const resultado = await cartManager.addProductInCart(idCart, idProd);
    return res.send({
       carts: resultado
   })
-})
+}
 
-router.get("/:cid", async (req, res) => {
+export const getCart = async (req, res) => {
    const id = req.params.cid;
    const carts = await cartManager.getCartsById(id);
    res.send({
       cart:carts
    });
-})
+}
 
-router.delete('/:cid/product/:pid', async (req,res)=>{
+export const deleteProductInCart = async (req,res)=>{
    const idCart = req.params.cid;
    const idProd = req.params.pid;
    const resultado = await cartManager.deleteProductInCart(idCart, idProd);
    return res.send({
       carts: resultado
   })
-})
+}
 
-router.delete('/:cid', async (req,res)=>{
+export const deleteCart = async (req,res)=>{
    const idCart = req.params.cid;
    const resultado = await cartManager.deleteCart(idCart);
    return res.send({
       carts: resultado
   })
-})
+}
 
-router.put('/:cid', async (req,res)=>{
+export const updateManyCart = async (req,res)=>{
    const idCart = req.params.cid;
    const products = req.body;
    const resultado = await cartManager.updateManyCart(idCart, products);
    return res.send({
       carts: resultado
    })
-})
+}
 
-router.put('/:cid/product/:pid', async (req,res)=>{
+export const updateQuantity = async (req,res)=>{
    const idCart = req.params.cid;
    const idProd = req.params.pid;
    const quantityString = req.body.quantity;
@@ -87,15 +87,13 @@ router.put('/:cid/product/:pid', async (req,res)=>{
    return res.send({
       carts: resultado
    })
-})
+}
 
-router.put('/:cid/user/:pid', async (req,res)=>{
+export const addCartInUser = async (req,res)=>{
    const idCart = req.params.cid;
    const idUser = req.params.pid;
    const resultado = await cartManager.addCartInUser(idCart, idUser);
    return res.send({
       carts: resultado
    })
-})
-
-export default router;
+}
