@@ -1,4 +1,9 @@
 import cartModel from '../models/cart.model.js';
+import ticketModel from '../models/ticket.model.js';
+import productModel from '../models/products.model.js';
+import ProductManager from '../manager/productManagerMDB.js';
+import { v4 as uuidv4 } from "uuid";
+const productManager = new ProductManager(productModel);
 
 export default class CartsManager {
 
@@ -87,7 +92,6 @@ export default class CartsManager {
 
       const cart = carts.find((cart) => cart._id == idCart);
       let productInCart = cart.products;
-
       const filteredProducts = productInCart.filter((product) => product.product._id != idProd);
       await cartModel.updateOne({ _id: idCart }, { "products": filteredProducts });
       const cartsUpdate = await this.getCartsById(idCart);
@@ -152,6 +156,87 @@ export default class CartsManager {
       throw error;
     }
   }
+
+  addPurchase = async (idCart, email) => {
+    let totalPrice = 0;
+    let totalProductInTicket = 0;
+    const outOfStockProducts = []; 
+    const carts = await this.getCartsById(idCart);
+   
+    // si no tengo ningún carrito con ese ID, devuelvo un error
+    if (!carts || carts.length === 0) {
+      return {
+        code: 200,
+        status: 'Error',
+        message: 'No se ha encontrado un carrito con ese ID'
+      };
+    }
+    
+    // Verificar si hay productos en el carrito antes de recorrerlos
+    if (carts[0].products && carts[0].products.length > 0) {
+      for (const item of carts[0].products) {
+        if (item.quantity <= item.product.stock) {
+          const idProduct = item.product._id.toString();
+          // calculo el precio
+          let unitPrice = 0;
+          unitPrice = item.product.price * item.quantity
+          totalPrice += unitPrice
+    
+          // borro el producto del carrito
+          await this.deleteProductInCart (idCart, idProduct);
+          
+          // actualizo el stock
+          item.product.stock -= item.quantity;
+          await productManager.updateProduct(idProduct, item.product);
+          totalProductInTicket += 1;
+        } else {
+          outOfStockProducts.push(item.product._id);
+        }
+      }
+    }
+
+    // si no tengo productos para agregar en el ticket envio mensaje de error
+    if (totalProductInTicket == 0){
+      return {
+        code: 200,
+        status: 'Error',
+        message: 'La cantidad de productos del ticket es igual a 0, valide por favor'
+      };
+    }
+
+    const ticket = await this.addTicket(totalPrice, email);
+
+    if (outOfStockProducts.length > 0) {
+      return {
+        code: 200,
+        status: 'Error',
+        message: 'Algunos productos tienen cantidad mayor al stock',
+        outOfStockProducts: outOfStockProducts
+      };
+    }
+
+    return ticket;
+
+  }
+
+   // agrego los ticket
+   addTicket = async (amount, email) => {
+    try {
+       const id = uuidv4();
+       let ticket = {
+          amount: amount,
+          purchaser: email,
+          code: id,
+       }
+
+       const result = await ticketModel.create(ticket);
+
+       return result;
+    } catch (error) {
+       console.error('Error en addTicket:', error);
+       throw error;
+    }
+ }
 
   write = async (cart) => {
     try {

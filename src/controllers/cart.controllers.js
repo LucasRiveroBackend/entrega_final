@@ -97,3 +97,14 @@ export const addCartInUser = async (req,res)=>{
       carts: resultado
    })
 }
+
+export const addPurchase = async (req, res)=>{
+   const id = req.params.cid;
+   const { email } = req.body;
+
+   const ticket = await cartManager.addPurchase(id, email)
+
+   res.send({
+     ticket: ticket
+   });
+}

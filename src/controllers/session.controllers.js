@@ -1,4 +1,5 @@
 import userModel from '../Dao/models/user.model.js';
+import {loadUser} from '../middlewares/validations.js';
 
 export const register = async (req, res) =>{
    res.send({status:"succes", message:"User registered"});
@@ -18,15 +19,16 @@ export const login = async (req,res)=>{
        name: req.user.last_name,
        age: req.user.age,
        email: req.user.email,
+       role: req.user.rol,
        cart: cartId
    }
 
    const users = await userModel.findById(req.session.user.id);
+   await loadUser(users);
    const user = users
    if (user) {
        const cartInUsers = user.cart;
        const cartExists = cartInUsers.some((cart) => cart._id == cartId);
-     
        if (cartExists) {
          console.log('Ya existe');
        } else {

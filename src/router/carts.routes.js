@@ -8,9 +8,13 @@ import {
    deleteCart,
    updateManyCart,
    updateQuantity,
-   addCartInUser
+   addCartInUser,
+   addPurchase
 }
    from '../controllers/cart.controllers.js';
+
+ import {isUser} from '../middlewares/validations.js';
+
 
 const router = Router();
 
@@ -18,7 +22,7 @@ router.post('/', addCart)
 
 router.get('/', getCarts)
 
-router.post("/:cid/product/:pid", addProductInCart)
+router.post("/:cid/product/:pid", isUser, addProductInCart)
 
 router.get("/:cid", getCart)
 
@@ -31,5 +35,7 @@ router.put('/:cid', updateManyCart)
 router.put('/:cid/product/:pid', updateQuantity)
 
 router.put('/:cid/user/:pid', addCartInUser)
+
+router.get('/:cid/purchase', addPurchase)
 
 export default router;
