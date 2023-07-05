@@ -3,7 +3,6 @@ let userEmail;
 export const loadUser = (user) => {
    userType = user.rol;
    userEmail = user.email;
-   console.log('userType: ', user)
 };
 
 export const isAdmin = (req, res, next) => {

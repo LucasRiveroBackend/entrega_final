@@ -5,6 +5,7 @@ import GitHubStrategy from 'passport-github2';
 import { createHash, validatePassword } from '../utils.js';
 import { config } from "./config.js";
 
+
 const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
@@ -45,9 +46,7 @@ const initializePassport = () => {
     });
 
     passport.use('login', new LocalStrategy({usernameField:'email'}, async (username, password, done)=>{
-
         try {
-           
            const user = await userService.findOne({email:username})
             if(!user){
                 return done(null, false);

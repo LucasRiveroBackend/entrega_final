@@ -1,6 +1,6 @@
 import userModel from '../Dao/models/user.model.js';
 import {loadUser} from '../middlewares/validations.js';
-
+import { getUserDto } from "../Dao/dto/user.dto.js";
 export const register = async (req, res) =>{
    res.send({status:"succes", message:"User registered"});
 }
@@ -12,7 +12,7 @@ export const failregister = async (req,res)=>{
 
 export const login = async (req,res)=>{
    if(!req.user) return res.status(400).send({status:"error", error: 'Invalid credentials'});
-   const cartId = req.body.cartId; 
+   const cartId = req.body.cartId;
    req.session.user = {
        id: req.user._id,
        name : req.user.firs_name,
@@ -41,8 +41,9 @@ export const login = async (req,res)=>{
      } else {
        console.log('Usuario no encontrado');
      }
+     const userDto = await new getUserDto(user);
    const update = await userModel.findById(req.session.user.id).populate('cart.cart');
-   res.send({status:"success", payload:req.user, message:"Primer logueo!!"})
+   res.send({status:"success", payload:userDto, message:"Primer logueo!!"})
 }
 
 export const logout = async (req,res)=>{

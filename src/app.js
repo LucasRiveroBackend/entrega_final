@@ -22,7 +22,13 @@ const PORT = config.server.port;
 const MONGO = config.mongo.url;
 const SECRET = config.server.secret;
 const app = express();
-const connection = mongoose.connect(MONGO);
+//const connection = mongoose.connect(MONGO);
+try {
+  await mongoose.connect(MONGO);
+  console.log("Conectado a la base de datos.")
+} catch (error) {
+  console.log("Error al tratar deconectar: " + error)
+}
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 app.use(express.static(__dirname + "/public"));
