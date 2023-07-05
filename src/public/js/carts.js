@@ -54,18 +54,33 @@ function sendProductRequest(obj) {
           'Content-Type': 'application/json'
       }
    }).then(result => {
-      if (result.status == 200) {
+      console.log('+++result+++ ', result.status);
+      if (result.status === 200) {
           return result.json(); // Parse the response body as JSON
+      } else {
+          return result.json().then(data => {
+             throw new Error(data.message);
+          });
       }
    }).then(responseData => {
       Swal.fire({
-         toast:true,
+         toast: true,
          position: 'top-end',
          showConfirmButton: false,
          timer: 3000,
          title: `Producto agregado correctamente`,
          icon: "success"
-     })
+      });
+   }).catch(error => {
+      console.error('Error:', error);
+      Swal.fire({
+         toast: true,
+         position: 'top-end',
+         showConfirmButton: false,
+         timer: 3000,
+         title: error.message || 'Error desconocido',
+         icon: "error"
+      });
    });
 }
 

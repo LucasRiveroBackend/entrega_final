@@ -171,7 +171,7 @@ export default class CartsManager {
         message: 'No se ha encontrado un carrito con ese ID'
       };
     }
-    
+
     // Verificar si hay productos en el carrito antes de recorrerlos
     if (carts[0].products && carts[0].products.length > 0) {
       for (const item of carts[0].products) {

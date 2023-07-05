@@ -23,6 +23,7 @@ form.addEventListener('submit', e => {
     }
   }).then(result => {
     if (result.status === 200) {
+      console.log('result: ', result)
       window.location.replace('/products');
     } else {
       return result.json().then(data => {
