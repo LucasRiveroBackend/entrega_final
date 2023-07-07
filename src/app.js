@@ -16,21 +16,31 @@ import MessageManager from "./Dao/manager/MessageManagerMDB.js";
 import ProductsManagar from "./Dao/manager/productManager.js";
 import initializePassport from './config/passport.config.js';
 import { config } from "./config/config.js";
-
+import { errorHandler } from "./middlewares/errorHandler.js";
+import { EError } from "./infrastructure/dictionaries/errors/EError.js";
+import { CustomError } from "./services/customError.service.js";
+import { generateConexionErrorInfo } from "./services/conexionErrorInfo.js";
 // const manager = new ProductsManagar();
 const PORT = config.server.port;
 const MONGO = config.mongo.url;
 const SECRET = config.server.secret;
 const app = express();
-//const connection = mongoose.connect(MONGO);
+app.use(errorHandler);
 try {
   await mongoose.connect(MONGO);
   console.log("Conectado a la base de datos.")
 } catch (error) {
-  console.log("Error al tratar deconectar: " + error)
+  const customerError = await CustomError.createError({
+    name: "Conexion database error",
+    cause: generateConexionErrorInfo(error),
+    message: "Error al conectar",
+    errorCode: EError.DATABASE_ERROR
+    
+  });
+  throw error;
 }
 app.use(express.json());
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + "/public"));
 
 app.engine("handlebars", handlebars.engine());
@@ -38,16 +48,17 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 app.use(session({
   store: new MongoStore({
-      mongoUrl: MONGO,
-      ttl:36000
+    mongoUrl: MONGO,
+    ttl: 36000
   }),
-  secret:SECRET,
-  resave:false,
-  saveUninitialized:false
+  secret: SECRET,
+  resave: false,
+  saveUninitialized: false
 }))
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use("/", viewRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/products', productRouter);
@@ -63,20 +74,20 @@ const server = app.listen(PORT, () => {
 const messageManager = new MessageManager();
 const io = new Server(server);
 const messages = [];
-io.on('connection', Socket =>{
+io.on('connection', Socket => {
 
-    console.log('Socket connected');
+  console.log('Socket connected');
 
-    Socket.on('message', data=>{
-      
-      const result = messageManager.addMessage(data);
-        messages.push(data);
-        io.emit('messageLogs', messages)
-    })
-    Socket.on('authenticated', data =>{
-        
-        Socket.broadcast.emit('newUserConnected', data)
+  Socket.on('message', data => {
 
-     })
+    const result = messageManager.addMessage(data);
+    messages.push(data);
+    io.emit('messageLogs', messages)
+  })
+  Socket.on('authenticated', data => {
+
+    Socket.broadcast.emit('newUserConnected', data)
+
+  })
 
 })

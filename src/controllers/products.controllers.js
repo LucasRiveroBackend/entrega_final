@@ -1,5 +1,11 @@
 import ProductManager from "../Dao/manager/productManagerMDB.js";
 import ProductModel from "../Dao/models/products.model.js";
+import {loadProducts} from "../config/utils.js";
+import {EError} from "../infrastructure/dictionaries/errors/EError.js";
+import {CustomError} from "../services/customError.service.js";
+import {generateProductErrorInfo} from "../services/productErrorInfo.js";
+import {generateProductExternError} from "../services/productErrorExtern.js";
+
 
 const productManager = new ProductManager(ProductModel);
 
@@ -39,6 +45,18 @@ export const getProduct = async (req, res)=>{
 
 export const addProduct = async (req,res)=>{
    const product = req.body;
+   const { title, description, price, thumbnail, code, stock, category } = req.body
+   if (!title || !description || !price || !code || !stock || !category) {
+      const customerError = await CustomError.createError({
+         name: "Product create error",
+         cause: generateProductErrorInfo(req.body),
+         message: "Error creando el Producto",
+         errorCode: EError.INVALID_JSON
+       });
+       return res.send({
+         error:customerError,
+       })
+   }
    const resultado = await productManager.addProduct(product)
    if(resultado){
       return res.send({
@@ -66,4 +84,27 @@ export const deleteProduct = async (req,res)=>{
          producto:resultado,
       })
    }
+}
+
+export const addProductFaker = async (req,res)=>{
+   const products = await loadProducts();
+   let resultado;
+   if (products.length > 0){
+      resultado = await ProductModel.insertMany(products);
+   }else{
+      if (products.length === 0) {
+         const customerError = await CustomError.createError({
+            name: "Product create error",
+            cause: generateProductExternError(req.body),
+            message: "Error creando el Producto Faker",
+            errorCode: EError.EXTERNAR_ERROR
+          });
+          return res.send({
+            error:customerError,
+          })
+      }
+   }
+   return res.send({
+      productos: resultado
+   })
 }

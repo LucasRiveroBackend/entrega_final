@@ -1,6 +1,8 @@
 import CartManager  from "../Dao/manager/CartManagerMDB.js";
 import CartModel  from "../Dao/models/cart.model.js";
-
+import {EError} from "../infrastructure/dictionaries/errors/EError.js";
+import {CustomError} from "../services/customError.service.js";
+import {generateCartErrorInfo} from "../services/cartErrorInfo.js";
 const cartManager = new CartManager(CartModel);
 
 export const addCart = async (req,res)=>{
@@ -38,6 +40,7 @@ export const getCarts = async (req,res)=>{
 export const addProductInCart = async (req, res) => {
    const idCart = req.params.cid;
    const idProd = req.params.pid;
+
    const resultado = await cartManager.addProductInCart(idCart, idProd);
    return res.send({
       carts: resultado
@@ -101,7 +104,17 @@ export const addCartInUser = async (req,res)=>{
 export const addPurchase = async (req, res)=>{
    const id = req.params.cid;
    const { email } = req.body;
-
+   if (!email) {
+      const customerError = await CustomError.createError({
+         name: "Product create error",
+         cause: generateCartErrorInfo(req.body),
+         message: "Error creando el Ticket",
+         errorCode: EError.INVALID_JSON
+       });
+       return res.send({
+         error:customerError,
+       })
+   }
    const ticket = await cartManager.addPurchase(id, email)
 
    res.send({

@@ -101,9 +101,6 @@ export default class ProductManager {
    addProduct = async (productInfo) => {
       try {
          const { title, description, price, thumbnail, code, stock, category } = productInfo
-         if (!title || !description || !price || !code || !stock || !category) {
-            return 'Todos los campos son obligatorios';
-         }
          let productsMaxId = await this.getProducts();
          let maxId = 0
 
