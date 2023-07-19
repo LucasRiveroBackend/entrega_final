@@ -5,7 +5,7 @@ import {EError} from "../infrastructure/dictionaries/errors/EError.js";
 import {CustomError} from "../services/customError.service.js";
 import {generateProductErrorInfo} from "../services/productErrorInfo.js";
 import {generateProductExternError} from "../services/productErrorExtern.js";
-
+import { addLogger } from "../config/logger.js";
 
 const productManager = new ProductManager(ProductModel);
 
@@ -53,6 +53,7 @@ export const addProduct = async (req,res)=>{
          message: "Error creando el Producto",
          errorCode: EError.INVALID_JSON
        });
+       req.logger.error('Error creando el Producto');
        return res.send({
          error:customerError,
        })
@@ -99,6 +100,7 @@ export const addProductFaker = async (req,res)=>{
             message: "Error creando el Producto Faker",
             errorCode: EError.EXTERNAR_ERROR
           });
+          req.logger.error('Error creando el Producto Faker');
           return res.send({
             error:customerError,
           })

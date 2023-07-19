@@ -4,7 +4,7 @@ import userService from '../Dao/models/user.model.js';
 import GitHubStrategy from 'passport-github2';
 import { createHash, validatePassword } from '../utils.js';
 import { config } from "./config.js";
-
+import * as logger from "./logger.js";
 
 const LocalStrategy = local.Strategy;
 
@@ -17,7 +17,7 @@ const initializePassport = () => {
             try {
                 const user = await userService.findOne({email:username}); 
                 if(user){
-                    console.log('El usuario existe');
+                    logger.infoLogger.info("El usuario existe");
                     return done(null,false);
                 }
                 const newUser = {
@@ -65,7 +65,7 @@ const initializePassport = () => {
         callbackURL: config.github.callBackUrl
     }, async (accesToken, refreshToken, profile, done)=>{
         try {
-            console.log(profile); //vemos la info que nos da GitHub
+            logger.infoLogger.info(profile);//vemos la info que nos da GitHub
             const user = await userService.find({email:profile._json.email})
             //const user = await userService.find({email:profile.username})
             if(!user || user.length == 0){

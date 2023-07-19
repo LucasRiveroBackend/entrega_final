@@ -8,6 +8,7 @@ import passport from 'passport';
 
 import productRouter from './router/products.routes.js';
 import cartRouter from './router/carts.routes.js';
+import logTestRouter from './router/logTest.routes.js';
 import __dirname from "./utils.js";
 import viewRouter from "./router/view.routes.js";
 import sessionsRouter from './router/sessions.routes.js';
@@ -20,15 +21,17 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 import { EError } from "./infrastructure/dictionaries/errors/EError.js";
 import { CustomError } from "./services/customError.service.js";
 import { generateConexionErrorInfo } from "./services/conexionErrorInfo.js";
-// const manager = new ProductsManagar();
+import * as logger from "./config/logger.js";
+
 const PORT = config.server.port;
 const MONGO = config.mongo.url;
 const SECRET = config.server.secret;
 const app = express();
+app.use(logger.addLogger);
 app.use(errorHandler);
 try {
   await mongoose.connect(MONGO);
-  console.log("Conectado a la base de datos.")
+  logger.infoLogger.info('Conectado a la base de datos');
 } catch (error) {
   const customerError = await CustomError.createError({
     name: "Conexion database error",
@@ -60,13 +63,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", viewRouter);
+app.use("/api/", logTestRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/products', productRouter);
 app.use("/realtimeproducts", realTimeProducts);
 app.use('/api/session', sessionsRouter);
 
 const server = app.listen(PORT, () => {
-  console.log("Servidor funcionando en el puerto: " + PORT);
+  logger.infoLogger.info("Servidor funcionando en el puerto: " + PORT);
 });
 
 
@@ -75,8 +79,7 @@ const messageManager = new MessageManager();
 const io = new Server(server);
 const messages = [];
 io.on('connection', Socket => {
-
-  console.log('Socket connected');
+  logger.infoLogger.info("Socket connected");
 
   Socket.on('message', data => {
 

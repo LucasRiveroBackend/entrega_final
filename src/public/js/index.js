@@ -22,7 +22,6 @@ let usuario = {
 })
 
 chatbox.addEventListener('keyup', evt =>{
-    console.log(evt);
     if(evt.key === "Enter"){
         if(chatbox.value.trim().length>0){
             socket.emit('message', {user:user, message:chatbox.value.trim()})

@@ -3,6 +3,7 @@ import CartModel  from "../Dao/models/cart.model.js";
 import {EError} from "../infrastructure/dictionaries/errors/EError.js";
 import {CustomError} from "../services/customError.service.js";
 import {generateCartErrorInfo} from "../services/cartErrorInfo.js";
+import { addLogger } from "../config/logger.js";
 const cartManager = new CartManager(CartModel);
 
 export const addCart = async (req,res)=>{
@@ -27,6 +28,7 @@ export const getCarts = async (req,res)=>{
       })
    }
    if (Number.isNaN(limit)){
+      req.logger.error('El limite debe ser numérico');
       return res.send({
          error: 'El limite debe ser numérico'
       })
@@ -111,6 +113,7 @@ export const addPurchase = async (req, res)=>{
          message: "Error creando el Ticket",
          errorCode: EError.INVALID_JSON
        });
+       req.logger.error('Error creando el Ticket');
        return res.send({
          error:customerError,
        })

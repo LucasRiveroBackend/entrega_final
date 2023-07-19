@@ -1,7 +1,7 @@
 import userModel from '../Dao/models/user.model.js';
 import { loadUser } from '../middlewares/validations.js';
 import { getUserDto } from "../Dao/dto/user.dto.js";
-
+import { addLogger, infoLogger } from "../config/logger.js";
 
 
 export const register = async (req, res) =>{
@@ -9,7 +9,7 @@ export const register = async (req, res) =>{
 }
 
 export const failregister = async (req, res) => {
-  console.log('Fallo en el registro');
+  req.logger.warn("!Fallo en el registro!");
   res.send({ error: 'Error en el registro' })
 }
 
@@ -33,7 +33,7 @@ export const login = async (req, res) => {
     const cartInUsers = user.cart;
     const cartExists = cartInUsers.some((cart) => cart._id == cartId);
     if (cartExists) {
-      console.log('Ya existe');
+      logger.infoLogger.info('Ya existe');
     } else {
       const cart = {
         _id: cartId
@@ -42,7 +42,7 @@ export const login = async (req, res) => {
       await userModel.updateOne({ _id: req.session.user.id }, { "cart": cartInUsers });
     }
   } else {
-    console.log('Usuario no encontrado');
+    req.logger.warn("Usuario no encontrado");
   }
   const userDto = await new getUserDto(user);
   const update = await userModel.findById(req.session.user.id).populate('cart.cart');

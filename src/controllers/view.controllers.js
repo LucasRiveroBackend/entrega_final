@@ -2,7 +2,6 @@ import ProductManager from '../Dao/manager/productManagerMDB.js';
 import CartManager from '../Dao/manager/CartManagerMDB.js';
 const cartManager = new CartManager();
 const productManager = new ProductManager();
-
 export const getCartById = async (req, res) => {
    const idCart = req.params.cid;
    const carts = await cartManager.getCartsById(idCart);

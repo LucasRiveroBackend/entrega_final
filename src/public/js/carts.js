@@ -29,8 +29,6 @@ form.addEventListener('submit', e => {
          cartId = responseData.producto._id; // Access the _id property
          const cartIdLabel = document.getElementById('cartIdLabel');
          cartIdLabel.textContent = `Cart ID: ${cartId}`;
-         // Use the cartId as needed
-         console.log('CART ID:', cartId);
 
          // Send request to /api/carts/{cartId}/product/{productId}
          sendProductRequest(obj);
@@ -45,7 +43,6 @@ form.addEventListener('submit', e => {
 function sendProductRequest(obj) {
    const data = new FormData(form);
    let productId = data.get("productId");
-   console.log('PRODUCT ID:', productId);
 
    fetch(`/api/carts/${cartId}/product/${productId}`, {
       method: 'POST',
@@ -54,7 +51,6 @@ function sendProductRequest(obj) {
           'Content-Type': 'application/json'
       }
    }).then(result => {
-      console.log('+++result+++ ', result.status);
       if (result.status === 200) {
           return result.json(); // Parse the response body as JSON
       } else {
