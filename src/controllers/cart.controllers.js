@@ -1,5 +1,6 @@
 import CartManager  from "../Dao/manager/CartManagerMDB.js";
 import CartModel  from "../Dao/models/cart.model.js";
+import productModel from "../Dao/models/products.model.js";
 import {EError} from "../infrastructure/dictionaries/errors/EError.js";
 import {CustomError} from "../services/customError.service.js";
 import {generateCartErrorInfo} from "../services/cartErrorInfo.js";
@@ -42,11 +43,23 @@ export const getCarts = async (req,res)=>{
 export const addProductInCart = async (req, res) => {
    const idCart = req.params.cid;
    const idProd = req.params.pid;
+   // busco el producto
+   const product = await productModel.findById(idProd);
+   if (!product){
+      return res.send({status:"error", message:"no existe este producto"})
+   }
+   // si tengo producto para ese id valido si el owner es igual al id del usuario y si este es premium
+   const productOwer = JSON.parse(JSON.stringify(product.owner));
+   const userId = JSON.parse(JSON.stringify(req.user._id));
+   if((req.user.rol === "premium" && productOwer == userId)){
+      return res.send({status:"error", message:"no puedes agregar este producto"})
+   }else{
+      const resultado = await cartManager.addProductInCart(idCart, idProd);
+      return res.send({
+         carts: resultado
+     })
+   }
 
-   const resultado = await cartManager.addProductInCart(idCart, idProd);
-   return res.send({
-      carts: resultado
-  })
 }
 
 export const getCart = async (req, res) => {

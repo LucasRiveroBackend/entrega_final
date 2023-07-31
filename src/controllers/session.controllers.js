@@ -1,11 +1,11 @@
 import userModel from '../Dao/models/user.model.js';
 import { loadUser } from '../middlewares/validations.js';
 import { getUserDto } from "../Dao/dto/user.dto.js";
-import { addLogger, infoLogger } from "../config/logger.js";
-
-
-export const register = async (req, res) =>{
-  res.send({status:"succes", message:"User registered"});
+import { createHash, validatePassword, generateEmailToken, verifyEmailToken } from "../utils.js";
+import { sendRecoveryPass } from "../config/email.js"
+import * as logger from "../config/logger.js";
+export const register = async (req, res) => {
+  res.send({ status: "succes", message: "User registered" });
 }
 
 export const failregister = async (req, res) => {
@@ -65,4 +65,50 @@ export const githubCallback = async (req, res) => {
     rol: 'user'
   }
   res.redirect('/products')
+}
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    //verifico si existe
+    const user = await userModel.findOne({ email: email })
+    if (!user) {
+      return res.send(`<div>Error, <a href="/forgot-password">Intente de nuevo</a></div>`)
+    }
+    const token = generateEmailToken(email, 3 * 60);
+    await sendRecoveryPass(email, token);
+    res.send("Se envio un correo a su cuenta para restablecer la contraseña, volver  <a href='/login'>al login</a>")
+  } catch (error) {
+    console.log(error)
+    logger.infoLogger.info('Error al forgotPassword');
+    return res.send(`<div>Error, <a href="/forgot-password">Intente de nuevo</a></div>`)
+  }
+}
+
+export const resetPassword = async (req, res) => {
+  try {
+    const token = req.query.token;
+    const { email, newPassword } = req.body;
+    //validamos el token
+    const validEmail = verifyEmailToken(token)
+    if (!validEmail) {
+      return res.send(`El enlace ya no es valido, genere uno nuevo: <a href="/forgot-password">Nuevo enlace</a>.`)
+    }
+    const user = await userModel.findOne({ email: email });
+    if (!user) {
+      return res.send("El usuario no esta registrado.")
+    }
+    if (validatePassword(newPassword, user)) {
+      return res.send("No puedes usar la misma contraseña.")
+    }
+    const userData = {
+      ...user._doc,
+      password: createHash(newPassword)
+    };
+    const userUpdate = await userModel.findOneAndUpdate({ email: email }, userData);
+    res.render("login", { message: "contraseña actualizada" })
+
+  } catch (error) {
+    res.send(error.message)
+  }
 }

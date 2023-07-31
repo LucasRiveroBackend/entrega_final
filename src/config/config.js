@@ -25,5 +25,11 @@ export const config = {
       clientID: CLIENTID,
       clientSecret: CLIENTSECRET,
       callBackUrl: CALLBACKURL
-    }
+    },
+    gmail:{
+        //AppCoder
+        emailToken:process.env.SECRET_TOKEN_EMAIL,
+        emailAdmin:process.env.EMAIL_ADMIN,
+        emailPass:process.env.EMAIL_PASSWORD
+    },
 }

@@ -6,10 +6,10 @@ export const loadUser = (user) => {
 };
 
 export const isAdmin = (req, res, next) => {
-   if (userType !== 'admin' || userType === undefined) {
-      res.status(400).send({ status: "error", message: "Operacion no permitida para el tipo de usuario" });
-   } else {
+   if (userType === 'admin' || userType === 'premium') {
       next();
+   } else {
+      res.status(400).send({ status: "error", message: "Operacion no permitida para el tipo de usuario" });
    }
 };
 

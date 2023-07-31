@@ -30,6 +30,13 @@ router.get('/profile', privateAcces ,(req,res)=>{
     })
 })
 
-router.get('/resetPassword', (req,res)=>{ res.render('resetPassword')})
+router.get("/forgot-password",(req,res)=>{
+  res.render("forgotPassword");
+});
+
+router.get("/reset-password",(req,res)=>{
+  const token = req.query.token;
+  res.render("resetPassword",{token});
+});
 
 export default router;

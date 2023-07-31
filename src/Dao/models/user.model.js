@@ -10,6 +10,7 @@ const schema = new mongoose.Schema({
     password:String,
     rol: {
       type: String,
+      enum:["usuario","admin","premium"],
       default: 'usuario'
      },
     cart: {

@@ -12,6 +12,7 @@ import logTestRouter from './router/logTest.routes.js';
 import __dirname from "./utils.js";
 import viewRouter from "./router/view.routes.js";
 import sessionsRouter from './router/sessions.routes.js';
+import { usersRouter } from "./router/users.routes.js";
 import realTimeProducts from "./router/realTimeProducts.routes.js";
 import MessageManager from "./Dao/manager/MessageManagerMDB.js";
 import ProductsManagar from "./Dao/manager/productManager.js";
@@ -68,6 +69,7 @@ app.use('/api/carts', cartRouter);
 app.use('/api/products', productRouter);
 app.use("/realtimeproducts", realTimeProducts);
 app.use('/api/session', sessionsRouter);
+app.use("/api/users", usersRouter);
 
 const server = app.listen(PORT, () => {
   logger.infoLogger.info("Servidor funcionando en el puerto: " + PORT);
