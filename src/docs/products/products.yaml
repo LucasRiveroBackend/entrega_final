@@ -1,0 +1,212 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtengo todos los productos
+      tags:
+        - Productos
+      responses:
+        "200":
+          description: Los productos se obtuvieron de forma correcta.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Products"
+        "500":
+          description: Error interno del servidor.
+    post:
+      summary: Crear un nuevo producto
+      tags:
+        - Productos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/createProduct'
+      responses:
+        "201":
+          description: Producto creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Products'
+        "400":
+          description: Solicitud inválida
+        "500":
+          description: Error interno del servidor
+  /api/products/{uid}:
+    get:
+      summary: Obtener un producto por el id
+      tags:
+        - Productos
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: uid es el id del producto que desea obtener
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Se obtuvo el producto correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Products'
+        "500":
+          description: Error interno del servidor
+    delete:
+      summary: eliminar un producto por id
+      tags:
+        - Productos
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: uid es el id del producto que desea eliminar
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Se elimino el producto correctamente
+        "500":
+          description: Error interno del servidor
+    put:
+      summary: Actualizar el producto por el id
+      tags:
+        - Productos
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: uid es el id del producto que desea actualizar
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/updateProduct'
+      responses:
+        "200":
+          description: Se actualizo el usuario correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Products'
+        "500":
+          description: Error interno del servidor
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        title: 
+          type: string
+          description: Titulo
+        description: 
+          type: string
+          description: Descripcion del producto
+        price: 
+          type: number
+          description: Precio
+        thumbnail: 
+          type: string
+          description: Imagen del producto
+        code: 
+          type: string
+          description: Codigo de producto
+        stock: 
+          type: number
+          description: Cantidad de productos disponibles
+        id: 
+          type: number
+          description: Id del producto
+        category: 
+          type: string
+          description: Categoria
+        status: 
+          type: boolean
+          description: Estado del producto
+        owner: 
+          type: ObjectId
+          description: Creador del producto
+      example:
+        _id: ObjectId('ahjg7862jahsgd871263')
+        title: 'nombre del producto'
+        description: 'Se describe el producto'
+        price: 500
+        thumbnail: 'ruta de la imagen del producto'
+        code: 'ABC123CDE'
+        stock: 80
+        id: 123456
+        category: 'zapatillas'
+        status: true
+        owner: ObjectId('ahjg7862jahsgd871263')
+  requestBodies:
+    updateProduct:
+      type: object
+      properties:
+        title: 
+          type: string
+          description: Titulo
+        description: 
+          type: string
+          description: Descripcion del producto
+        price: 
+          type: number
+          description: Precio
+        thumbnail: 
+          type: string
+          description: Imagen del producto
+        code: 
+          type: string
+          description: Codigo de producto
+        stock: 
+          type: number
+          description: Cantidad de productos disponibles
+        id: 
+          type: number
+          description: Id del producto
+        category: 
+          type: string
+          description: Categoria
+        status: 
+          type: boolean
+          description: Estado del producto
+        owner: 
+          type: ObjectId
+          description: Creador del producto
+    createProduct:
+      type: object
+      properties:
+        title: 
+          type: string
+          description: Titulo
+        description: 
+          type: string
+          description: Descripcion del producto
+        price: 
+          type: number
+          description: Precio
+        thumbnail: 
+          type: string
+          description: Imagen del producto
+        code: 
+          type: string
+          description: Codigo de producto
+        stock: 
+          type: number
+          description: Cantidad de productos disponibles
+        category: 
+          type: string
+          description: Categoria
+        status: 
+          type: boolean
+          description: Estado del producto
+        owner: 
+          type: ObjectId
+          description: Creador del producto

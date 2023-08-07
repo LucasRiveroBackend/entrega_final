@@ -17,17 +17,15 @@ export default class CartsManager {
       let cartsMaxId = await this.getCarts();
       let maxId = 0
       for (let i = 0; i < cartsMaxId.length; i++) {
-        if (cartsMaxId[i].id > maxId) {
+        if (parseInt(cartsMaxId[i].id) > parseInt(maxId)) {
           maxId = cartsMaxId[i].id;
         }
       }
-
       let cart = {
         id: ++maxId,
         products: [
         ]
       }
-
       const result = await cartModel.create(cart);
 
       return result;

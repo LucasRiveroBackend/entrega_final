@@ -9,7 +9,7 @@ const cartManager = new CartManager(CartModel);
 
 export const addCart = async (req,res)=>{
    const cart = req.body;
-   const resultado = await cartManager.addCarts(cart);
+   const resultado = await cartManager.addCarts();
 
    if(resultado){
       return res.send({

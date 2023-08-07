@@ -5,6 +5,7 @@ import MongoStore from 'connect-mongo';
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import passport from 'passport';
+import swaggerUi from "swagger-ui-express";
 
 import productRouter from './router/products.routes.js';
 import cartRouter from './router/carts.routes.js';
@@ -18,6 +19,7 @@ import MessageManager from "./Dao/manager/MessageManagerMDB.js";
 import ProductsManagar from "./Dao/manager/productManager.js";
 import initializePassport from './config/passport.config.js';
 import { config } from "./config/config.js";
+import { swaggerSpecs } from "./config/docConfig.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { EError } from "./infrastructure/dictionaries/errors/EError.js";
 import { CustomError } from "./services/customError.service.js";
@@ -70,6 +72,8 @@ app.use('/api/products', productRouter);
 app.use("/realtimeproducts", realTimeProducts);
 app.use('/api/session', sessionsRouter);
 app.use("/api/users", usersRouter);
+//Ruta de la documentacion
+app.use("/api/docs", swaggerUi.serve,swaggerUi.setup(swaggerSpecs));
 
 const server = app.listen(PORT, () => {
   logger.infoLogger.info("Servidor funcionando en el puerto: " + PORT);
