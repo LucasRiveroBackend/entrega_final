@@ -100,7 +100,7 @@ export default class ProductManager {
    // agrego los productos
    addProduct = async (productInfo) => {
       try {
-         const { title, description, price, thumbnail, code, stock, category } = productInfo
+         const { title, description, price, thumbnail, code, stock, category, owner } = productInfo
          let productsMaxId = await this.getProducts();
          let maxId = 0
 
@@ -125,7 +125,8 @@ export default class ProductManager {
             stock: stock,
             id: ++maxId,
             category: category,
-            status: true
+            status: true,
+            owner: owner
          }
 
          const result = await productModel.create(product);

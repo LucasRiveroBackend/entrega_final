@@ -1,8 +1,10 @@
 let userType;
 let userEmail;
+let userId;
 export const loadUser = (user) => {
    userType = user.rol;
    userEmail = user.email;
+   userId = user._id
 };
 
 export const isAdmin = (req, res, next) => {

@@ -18,6 +18,7 @@ const generateProduct = () => {
       id:parseInt(string.numeric(5)),
       category: commerce.productAdjective(),
       status: datatype.boolean(),
+      owner: database.mongodbObjectId(),
       _id: database.mongodbObjectId(),
     }
 }

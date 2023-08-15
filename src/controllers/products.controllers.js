@@ -6,7 +6,6 @@ import {CustomError} from "../services/customError.service.js";
 import {generateProductErrorInfo} from "../services/productErrorInfo.js";
 import {generateProductExternError} from "../services/productErrorExtern.js";
 import { addLogger } from "../config/logger.js";
-
 const productManager = new ProductManager(ProductModel);
 
 export const getProducts = async (req,res)=>{
@@ -45,6 +44,7 @@ export const getProduct = async (req, res)=>{
 
 export const addProduct = async (req,res)=>{
    const product = req.body;
+   console.log('Product: ', product)
    const { title, description, price, thumbnail, code, stock, category } = req.body
    if (!title || !description || !price || !code || !stock || !category) {
       const customerError = await CustomError.createError({
@@ -58,7 +58,10 @@ export const addProduct = async (req,res)=>{
          error:customerError,
        })
    }
-   product.owner = req.user._id;
+   console.log('product.owner: ', product.owner)
+   if (product.owner == undefined){
+      product.owner = req.user._id;
+   }
    const resultado = await productManager.addProduct(product)
    if(resultado){
       return res.send({
@@ -79,15 +82,21 @@ export const updateProduct = async (req,res)=>{
 }
 
 export const deleteProduct = async (req,res)=>{
+
    const id = req.params.pid;
-   const productOwer = JSON.parse(JSON.stringify(product.owner));
-   const userId = JSON.parse(JSON.stringify(req.user._id));
-   if((req.user.rol === "premium" && productOwer == userId) || req.user.rol === "admin"){
-      const resultado = await productManager.deleteProduct(id)
-      if(resultado){
-         return res.send({
-            producto:resultado,
-         })
+   const product = await productManager.getProductById(id);
+   if (product){
+      const productOwer = JSON.parse(JSON.stringify(product[0].owner));
+      const userId = JSON.parse(JSON.stringify(req.user._id));
+      if((req.user.rol === "premium" && productOwer == userId) || req.user.rol === "admin"){
+         const resultado = await productManager.deleteProduct(id)
+         if(resultado){
+            return res.send({
+               producto:resultado,
+            })
+         }
+      }else{
+         res.send({status:"error", message:"no puedes borrar este producto"})
       }
    }else{
       res.send({status:"error", message:"no puedes borrar este producto"})

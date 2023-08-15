@@ -130,7 +130,6 @@ export default class CartsManager {
     try {
       const carts = await this.getCartsById(idCart);
       const cart = carts.find((cart) => cart._id == idCart);
-      
       let productInCart = cart.products;
       const prodIndex = productInCart.findIndex((product) => product.product._id == idProd);
       
@@ -138,11 +137,12 @@ export default class CartsManager {
         // Si el producto ya existe, incrementar la cantidad en quantity
         productInCart[prodIndex].quantity = quantity;
       } else {
-        return {
-          code: 400,
-          status: 'Error',
-          message: 'No se ha encontrado un producto con ese ID'
+        // Si el producto no existe, agregarlo al arreglo
+        let producto = {
+          product: idProd,
+          quantity: 1
         };
+        productInCart.push(producto);
       }
 
       // Actualizar el arreglo de productos en el carrito utilizando el operador $inc

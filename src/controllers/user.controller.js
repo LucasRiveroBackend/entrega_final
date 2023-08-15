@@ -1,3 +1,5 @@
+import userModel from '../Dao/models/user.model.js';
+import {loadUser} from '../middlewares/validations.js';
 export const changeRole = async (req,res)=>{
    try {
        const userId = req.params.uid;
@@ -12,6 +14,7 @@ export const changeRole = async (req,res)=>{
            return res.json({status:"error", message:"no es posible cambiar el role del usuario"});
        }
        await userModel.updateOne({_id:user._id},user);
+       await loadUser(user);
        res.send({status:"success", message:"rol modificado"});
    } catch (error) {
        console.log(error.message);

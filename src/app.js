@@ -78,7 +78,7 @@ app.use("/api/docs", swaggerUi.serve,swaggerUi.setup(swaggerSpecs));
 const server = app.listen(PORT, () => {
   logger.infoLogger.info("Servidor funcionando en el puerto: " + PORT);
 });
-
+export {app};
 
 //Chat socket.io
 const messageManager = new MessageManager();

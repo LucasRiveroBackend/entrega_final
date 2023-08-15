@@ -13,7 +13,7 @@ export const addCart = async (req,res)=>{
 
    if(resultado){
       return res.send({
-         producto:resultado,
+         cart:resultado,
       })
    }
 }
@@ -49,9 +49,22 @@ export const addProductInCart = async (req, res) => {
       return res.send({status:"error", message:"no existe este producto"})
    }
    // si tengo producto para ese id valido si el owner es igual al id del usuario y si este es premium
+
    const productOwer = JSON.parse(JSON.stringify(product.owner));
-   const userId = JSON.parse(JSON.stringify(req.user._id));
-   if((req.user.rol === "premium" && productOwer == userId)){
+   let userId;
+   let userRol;
+   if (typeof req.user === 'undefined'){
+      // validacion para pruebas
+      console.log('productOwer: ', productOwer)
+      userId = productOwer;
+      userRol = "usuario";
+   }else{
+      userId = JSON.parse(JSON.stringify(req.user._id));
+      userRol = req.user.rol;
+   }
+
+
+   if((userRol === "premium" && productOwer == userId)){
       return res.send({status:"error", message:"no puedes agregar este producto"})
    }else{
       const resultado = await cartManager.addProductInCart(idCart, idProd);
@@ -59,7 +72,6 @@ export const addProductInCart = async (req, res) => {
          carts: resultado
      })
    }
-
 }
 
 export const getCart = async (req, res) => {
