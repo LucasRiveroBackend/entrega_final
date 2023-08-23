@@ -1,3 +1,4 @@
+import moment from 'moment-timezone';
 import userModel from '../Dao/models/user.model.js';
 import { loadUser } from '../middlewares/validations.js';
 import { getUserDto } from "../Dao/dto/user.dto.js";
@@ -16,6 +17,9 @@ export const failregister = async (req, res) => {
 export const login = async (req, res) => {
   if (!req.user) return res.status(400).send({ status: "error", error: 'Invalid credentials' });
   const cartId = req.body.cartId;
+  const buenosAiresTimezoneOffset = -180; // GMT-3 para horario estándar (sin horario de verano)
+  const now = new Date();
+  const buenosAiresTime = new Date(now.getTime() + buenosAiresTimezoneOffset * 60000); // Convertir a milisegundos
   req.session.user = {
     id: req.user._id,
     name: req.user.firs_name,
@@ -23,7 +27,8 @@ export const login = async (req, res) => {
     age: req.user.age,
     email: req.user.email,
     role: req.user.rol,
-    cart: cartId
+    cart: cartId,
+    last_connection: buenosAiresTime
   }
 
   const users = await userModel.findById(req.session.user.id);
@@ -44,12 +49,24 @@ export const login = async (req, res) => {
   } else {
     req.logger.warn("Usuario no encontrado");
   }
+  // actualizo la ultima fecha de logueo
+  await userModel.updateOne({ _id: req.session.user.id }, { "last_connection": buenosAiresTime });
   const userDto = await new getUserDto(user);
   const update = await userModel.findById(req.session.user.id).populate('cart.cart');
   res.send({ status: "success", payload: userDto, message: "Primer logueo!!" })
 }
 
 export const logout = async (req, res) => {
+  if (req.session.user) {
+    const userId = req.session.user.id;
+    const buenosAiresTimezoneOffset = -180;
+    const now = new Date();
+    // Convertir a milisegundos
+    const buenosAiresTime = new Date(now.getTime() + buenosAiresTimezoneOffset * 60000); 
+
+    // Realizar actualización de last_connection al cerrar sesión
+    await userModel.updateOne({ _id: userId }, { "last_connection": buenosAiresTime });
+  }
   req.session.destroy(err => {
     if (err) return res.status(500).send({ status: "error", error: "No pudo cerrar sesion" })
     res.redirect('/login');
@@ -79,7 +96,6 @@ export const forgotPassword = async (req, res) => {
     await sendRecoveryPass(email, token);
     res.send("Se envio un correo a su cuenta para restablecer la contraseña, volver  <a href='/login'>al login</a>")
   } catch (error) {
-    console.log(error)
     logger.infoLogger.info('Error al forgotPassword');
     return res.send(`<div>Error, <a href="/forgot-password">Intente de nuevo</a></div>`)
   }

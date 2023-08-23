@@ -1,6 +1,6 @@
 <div>
   <h1>Registro</h1>
-  <form id="registerForm">
+  <form id="registerForm" enctype="multipart/form-data">
     <table>
       <tr>
         <td><label>Nombre</label></td>
@@ -21,6 +21,9 @@
       <tr>
         <td><label>Contraseña</label></td>
         <td><input type="password" name="password"/></td>
+      </tr>
+      <tr>
+        <input type="file" placeholder="Imagen de perfil" name="avatar">
       </tr>
     </table>
     <br>

@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import {register, failregister, login, logout, githubCallback, forgotPassword, resetPassword} from '../controllers/session.controllers.js';
+import {uploaderProfile} from "../utils.js";
+import multer from 'multer'
 import passport from "passport";
 const router = Router();
 
-router.post('/register', passport.authenticate('register', { failureRedirect: '/failregister'}), register)
+router.post('/register', uploaderProfile.single("avatar"), passport.authenticate('register', { failureRedirect: '/failregister'}), register)
 
 router.get('/failregister', failregister)
 

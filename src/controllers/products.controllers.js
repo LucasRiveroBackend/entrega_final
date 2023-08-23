@@ -44,7 +44,6 @@ export const getProduct = async (req, res)=>{
 
 export const addProduct = async (req,res)=>{
    const product = req.body;
-   console.log('Product: ', product)
    const { title, description, price, thumbnail, code, stock, category } = req.body
    if (!title || !description || !price || !code || !stock || !category) {
       const customerError = await CustomError.createError({
@@ -58,7 +57,6 @@ export const addProduct = async (req,res)=>{
          error:customerError,
        })
    }
-   console.log('product.owner: ', product.owner)
    if (product.owner == undefined){
       product.owner = req.user._id;
    }

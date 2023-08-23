@@ -9,11 +9,11 @@ const cartManager = new CartManager(CartModel);
 
 export const addCart = async (req,res)=>{
    const cart = req.body;
-   const resultado = await cartManager.addCarts();
+   const resultado = await cartManager.addCarts(cart);
 
    if(resultado){
       return res.send({
-         cart:resultado,
+         producto:resultado,
       })
    }
 }
@@ -55,7 +55,6 @@ export const addProductInCart = async (req, res) => {
    let userRol;
    if (typeof req.user === 'undefined'){
       // validacion para pruebas
-      console.log('productOwer: ', productOwer)
       userId = productOwer;
       userRol = "usuario";
    }else{

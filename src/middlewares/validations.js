@@ -22,3 +22,12 @@ export const isUser = (req, res, next) => {
       next();
    }
 };
+
+
+export const checkAuthenticated = ( req,res,next ) =>{
+   if(req.user){
+       next();
+   }else{
+       return res.json({status:"error", message:"Necesita estar autenticado"});
+   }
+}

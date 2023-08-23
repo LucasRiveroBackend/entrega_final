@@ -14,7 +14,7 @@ form.addEventListener('submit', e => {
 
    data.forEach((value, key) => obj[key] = value);
 
-   if (!cartId) {
+   if (!cartId || cartId === 'undefined') {
       fetch('/api/carts', {
          method: 'POST',
          body: JSON.stringify(obj),
@@ -84,7 +84,7 @@ function sendProductRequest(obj) {
 cartId = localStorage.getItem('cartId');
 const cartIdLabel = document.getElementById('cartIdLabel');
 cartIdLabel.textContent = `Cart ID: ${cartId}`;
-if (!cartId) {
+if (!cartId || cartId === 'undefined')  {
    // Si no hay cartId almacenado, hacer una petición para crear el carrito
    fetch('/api/carts', {
       method: 'POST',

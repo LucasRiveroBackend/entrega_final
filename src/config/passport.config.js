@@ -2,7 +2,7 @@ import passport from 'passport';
 import local from 'passport-local';
 import userService from '../Dao/models/user.model.js';
 import GitHubStrategy from 'passport-github2';
-import { createHash, validatePassword } from '../utils.js';
+import { createHash, validatePassword, uploaderProfile  } from '../utils.js';
 import { config } from "./config.js";
 import * as logger from "./logger.js";
 
@@ -11,7 +11,7 @@ const LocalStrategy = local.Strategy;
 const initializePassport = () => {
     
     passport.use('register', new LocalStrategy(
-        {passReqToCallback:true, usernameField:'email'}, 
+        {passReqToCallback:true, usernameField:'email'},
         async (req,username, password,done) =>{
             const { first_name, last_name, email, age } = req.body;
             try {
