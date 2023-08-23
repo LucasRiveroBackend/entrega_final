@@ -6,7 +6,7 @@ import { createHash, validatePassword, generateEmailToken, verifyEmailToken } fr
 import { sendRecoveryPass } from "../config/email.js"
 import * as logger from "../config/logger.js";
 export const register = async (req, res) => {
-  res.send({ status: "succes", message: "User registered" });
+  res.redirect('/products');
 }
 
 export const failregister = async (req, res) => {
