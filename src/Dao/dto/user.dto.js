@@ -10,3 +10,12 @@ export class getUserDto{
       this.cart = user.cart;
    }
 }
+
+export class getUser{
+   constructor (user){
+      this.first_name = user.first_name;
+      this.rol = user.rol;
+      this.email = user.email;
+      this._id = user._id;
+   }
+}

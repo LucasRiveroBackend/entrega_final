@@ -1,5 +1,7 @@
 import ProductManager from '../Dao/manager/productManagerMDB.js';
 import CartManager from '../Dao/manager/CartManagerMDB.js';
+import userModel from '../Dao/models/user.model.js';
+import { getUser } from "../Dao/dto/user.dto.js";
 const cartManager = new CartManager();
 const productManager = new ProductManager();
 export const getCartById = async (req, res) => {
@@ -28,3 +30,13 @@ export const getProducts = async (req, res) => {
    const products = await productManager.getProducts(limit, page, category, stock, sort);
    res.render("products", { productos: products, user: req.session.user });
  }
+
+ export const getUsers = async (req, res) => {
+  const users = await userModel.find();
+  let usersDto = [];
+  for (let i = 0; i < users.length; i++) {
+    const userDto = await new getUser(users[i]);
+    usersDto.push(userDto);
+  }
+  res.render("users", { usersDto});
+};

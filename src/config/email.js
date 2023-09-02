@@ -31,3 +31,20 @@ export const sendRecoveryPass = async(userEmail,token)=>{
         `
     })
 };
+export const sendInactivityNotification = async(userEmail)=>{
+    const link = `http://localhost:8080/register`;
+    await transporter.sendMail({
+        from:config.gmail.emailAdmin,
+        to:userEmail,
+        subject:"Cuenta inhabilitada",
+        html: `
+        <div>
+        <h2>Se ha suspendido la cuenta</h2>
+        <p>Debido a la falta de actividad se elimino su cuenta</p>
+        <a href="${link}">
+        <button> Volver a registrarse </button>
+        </a>        
+        </div>
+        `
+    })
+};

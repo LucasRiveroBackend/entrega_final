@@ -1,0 +1,35 @@
+<div>
+   <h1 style="text-align: center;">Administracion de usuarios</h1>
+</div>
+<table border="1" style="border-collapse: collapse; width: 100%;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid black;">Nombre</th>
+      <th style="border: 1px solid black;">Rol</th>
+      <th style="border: 1px solid black;">Email</th>
+      <th style="border: 1px solid black;"></th> <!-- Columna para el botón "Cambiar Rol" -->
+      <th style="border: 1px solid black;"></th> <!-- Columna para el botón "Eliminar" -->
+    </tr>
+  </thead>
+  <tbody>
+    {{#each usersDto}}
+      <tr>
+        <td style="border: 1px solid black;">{{this.first_name}}</td>
+        <td style="border: 1px solid black;">{{this.rol}}</td>
+        <td style="border: 1px solid black;">
+          <form method="POST" action="/cambiar-rol">
+            <input type="hidden" name="userId" value="{{this._id}}">
+            <button type="submit" style="background-color: green; color: white; border: none;">Cambiar Rol</button>
+          </form>
+        </td>
+        <td style="border: 1px solid black;">{{this.email}}</td>
+        <td style="border: 1px solid black;">
+          <form method="POST" action="/eliminar-usuario">
+            <input type="hidden" name="userId" value="{{this._id}}">
+            <button type="submit" style="background-color: red; color: white; border: none;">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { getCartById, getProducts } from '../controllers/view.controllers.js';
+import { getCartById, getProducts, getUsers } from '../controllers/view.controllers.js';
 
 const router = Router();
 
@@ -14,6 +14,10 @@ const privateAcces = (req,res,next)=>{
   next();
 }
 
+const adminAcces = (req,res,next)=>{
+  console.log('req.session.user.role: ', req.session.user.role)
+  if(req.session.user.role !== 'admin') return res.redirect('/products');
+}
 router.get("/", privateAcces, async (req, res) => {res.render("chat")});
 
 router.get("/products/:cid", privateAcces, getCartById);
@@ -38,5 +42,7 @@ router.get("/reset-password",(req,res)=>{
   const token = req.query.token;
   res.render("resetPassword",{token});
 });
+
+router.get("/users", getUsers);
 
 export default router;
