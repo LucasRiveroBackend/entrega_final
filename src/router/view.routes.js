@@ -15,8 +15,7 @@ const privateAcces = (req,res,next)=>{
 }
 
 const adminAcces = (req,res,next)=>{
-  console.log('req.session.user.role: ', req.session.user.role)
-  if(req.session.user.role !== 'admin') return res.redirect('/products');
+  if(req.session.user.role !== 'admin') return res.redirect('/profile');
 }
 router.get("/", privateAcces, async (req, res) => {res.render("chat")});
 
@@ -43,6 +42,6 @@ router.get("/reset-password",(req,res)=>{
   res.render("resetPassword",{token});
 });
 
-router.get("/users", getUsers);
+router.get("/users", adminAcces,  getUsers);
 
 export default router;

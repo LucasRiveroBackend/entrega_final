@@ -8,11 +8,13 @@ export const changeRole = async (req, res) => {
     const userId = req.params.uid;
     //verificar si el usuario existe en la base de datos
     const user = await userModel.findById(userId);
-    if (user.rol === "usuario" && user.documents.length !== 3) {
-      return res.json({
-        status: "error",
-        message: "el usuario no completo el registro",
-      });
+    if (!req.session.user.rol === "admin"){
+      if (user.rol === "usuario" && user.documents.length !== 3) {
+        return res.json({
+          status: "error",
+          message: "el usuario no completo el registro",
+        });
+      }
     }
     const userRol = user.rol;
     if (userRol === "usuario") {
@@ -25,13 +27,17 @@ export const changeRole = async (req, res) => {
         message: "no es posible cambiar el role del usuario",
       });
     }
-    await userModel.updateOne({ _id: user._id }, user);
+    const resultado = await userModel.updateOne({ _id: user._id }, user);
     await loadUser(user);
-    res.send({ status: "success", message: "rol modificado" });
+    // En lugar de redireccionar, responde con un mensaje JSON
+    return res.status(200).send({
+      status: 'success',
+      user: resultado,
+    })
   } catch (error) {
     res.json({
       status: "error",
-      message: "hubo un error al cambiar el rol del usuario",
+      message: error,
     });
   }
 };
@@ -113,4 +119,16 @@ export const deleteInactiveUsers = async (req, res) => {
   return res.send({
     users: usersDto,
   });
+};
+
+export const deleteUserById = async (req, res) => {
+  const userId = req.params.uid;
+  //verificar si el usuario existe en la base de datos
+  const user = await userModel.findByIdAndDelete(userId);
+  if (user){
+    return res.status(200).send({
+      status: 'success',
+      user:user
+    })
+  }
 };

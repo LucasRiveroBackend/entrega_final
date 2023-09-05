@@ -1,10 +1,10 @@
 import {Router} from "express";
-import {changeRole, updateUserDocument, getUsers, deleteInactiveUsers} from "../controllers/user.controller.js";
+import {changeRole, updateUserDocument, getUsers, deleteInactiveUsers, deleteUserById} from "../controllers/user.controller.js";
 import {isAdmin, checkAuthenticated} from "../middlewares/validations.js";
 import { uploaderDocument } from "../utils.js";
 const router = Router();
 
-router.put("/premium/:uid", changeRole) 
+router.post("/premium/:uid", changeRole) 
 
 router.put("/:uid/documents",
 checkAuthenticated,
@@ -18,5 +18,7 @@ updateUserDocument
 router.get("/", getUsers);
 
 router.delete("/", deleteInactiveUsers);
+
+router.delete("/:uid", deleteUserById)
 
 export {router as usersRouter};
