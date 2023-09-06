@@ -22,7 +22,7 @@ export const getProducts = async (req, res) => {
    const stock = parseInt(stockString);
  
    if (!limit || Number.isNaN(limit)) {
-     limit = 1;
+     limit = 10;
    }
    if (!page || Number.isNaN(page)) {
      page = 1;

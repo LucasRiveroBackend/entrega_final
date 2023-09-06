@@ -16,7 +16,8 @@ export const isAdmin = (req, res, next) => {
 };
 
 export const isUser = (req, res, next) => {
-   if (userType !== 'usuario' || userType === undefined) {
+   if (req.user.rol !== 'usuario' || !req.user.rol) {
+      console.log('userType: ', userType)
       res.status(400).send({ status: "error", message: "Operacion no permitida para el tipo de usuario" });
    } else {
       next();

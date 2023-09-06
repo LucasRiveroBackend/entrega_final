@@ -4,103 +4,75 @@ const form = document.getElementById("productsForm");
 let cartId;
 let productId;
 
-form.addEventListener('submit', e => {
-   e.preventDefault();
+document.addEventListener('DOMContentLoaded', () => {
+   const cartId = localStorage.getItem('cartId');
+
+   // Actualizar el contenido de cartIdLabel con el valor de cartId
    const cartIdLabel = document.getElementById('cartIdLabel');
-   cartIdLabel.textContent = `Cart ID: ${cartId}`;
-   const data = new FormData(form);
-
-   const obj = {};
-
-   data.forEach((value, key) => obj[key] = value);
-
-   if (!cartId || cartId === 'undefined') {
-      fetch('/api/carts', {
-         method: 'POST',
-         body: JSON.stringify(obj),
-         headers: {
-             'Content-Type': 'application/json'
-         }
-     }).then(result => {
-         if (result.status == 200) {
-             return result.json(); // Parse the response body as JSON
-         }
-     }).then(responseData => {
-         cartId = responseData.producto._id; // Access the _id property
-         const cartIdLabel = document.getElementById('cartIdLabel');
-         cartIdLabel.textContent = `Cart ID: ${cartId}`;
-
-         // Send request to /api/carts/{cartId}/product/{productId}
-         sendProductRequest(obj);
-     });
-   } else {
-      const cartIdLabel = document.getElementById('cartIdLabel');
-      cartIdLabel.textContent = `Cart ID: ${cartId}`;
-      sendProductRequest(obj);
-   }
+   cartIdLabel.textContent = `Cart ID: ${cartId || 'No hay carrito'}`;
 });
 
-function sendProductRequest(obj) {
-   const data = new FormData(form);
-   let productId = data.get("productId");
+document.querySelectorAll('.accept-button').forEach(button => {
+   button.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const productId = event.target.getAttribute('data-product-id');
+      try {
+         // Obtener el cartId almacenado en localStorage
+         let cartId = localStorage.getItem('cartId');
 
-   fetch(`/api/carts/${cartId}/product/${productId}`, {
-      method: 'POST',
-      body: JSON.stringify(obj),
-      headers: {
-          'Content-Type': 'application/json'
+         if (!cartId) {
+            // Si no hay cartId almacenado, hacer una petición para crear el carrito
+            const cartResponse = await fetch('/api/carts', {
+               method: 'POST',
+               headers: {
+                  'Content-Type': 'application/json'
+               }
+            });
+
+            if (cartResponse.status === 200) {
+               const cartData = await cartResponse.json();
+               cartId = cartData.producto._id;
+               localStorage.setItem('cartId', cartId);
+               const cartIdLabel = document.getElementById('cartIdLabel');
+               cartIdLabel.textContent = `Cart ID: ${cartId}`;
+            }
+         }
+
+         // Realiza la solicitud al servidor con el productId y cartId
+         const response = await sendProductRequest(cartId, productId);
+
+         if (response.status === 200) {
+            // Producto agregado correctamente, muestra una notificación
+            Swal.fire({
+               toast: true,
+               position: 'top-end',
+               showConfirmButton: false,
+               timer: 5000,
+               title: `Producto agregado correctamente`,
+               icon: "success"
+            });
+         } else {
+            // Manejar el caso de error si es necesario
+            console.error('Error al agregar el producto al carrito:', response.statusText);
+         }
+      } catch (error) {
+         // Manejar errores generales aquí
+         console.error('Error:', error);
       }
-   }).then(result => {
-      if (result.status === 200) {
-          return result.json(); // Parse the response body as JSON
-      } else {
-          return result.json().then(data => {
-             throw new Error(data.message);
-          });
-      }
-   }).then(responseData => {
-      Swal.fire({
-         toast: true,
-         position: 'top-end',
-         showConfirmButton: false,
-         timer: 3000,
-         title: `Producto agregado correctamente`,
-         icon: "success"
-      });
-   }).catch(error => {
-      console.error('Error:', error);
-      Swal.fire({
-         toast: true,
-         position: 'top-end',
-         showConfirmButton: false,
-         timer: 3000,
-         title: error.message || 'Error desconocido',
-         icon: "error"
-      });
    });
-}
+});
 
-// Obtener el cartId almacenado en localStorage si existe
-cartId = localStorage.getItem('cartId');
-const cartIdLabel = document.getElementById('cartIdLabel');
-cartIdLabel.textContent = `Cart ID: ${cartId}`;
-if (!cartId || cartId === 'undefined')  {
-   // Si no hay cartId almacenado, hacer una petición para crear el carrito
-   fetch('/api/carts', {
-      method: 'POST',
-      headers: {
-         'Content-Type': 'application/json'
-      }
-   }).then(result => {
-      if (result.status == 200) {
-         return result.json();
-      }
-   }).then(responseData => {
-      cartId = responseData.producto._id;
-      localStorage.setItem('cartId', cartId);
-      const cartIdLabel = document.getElementById('cartIdLabel');
-      cartIdLabel.textContent = `Cart ID: ${cartId}`;
-   });
+async function sendProductRequest(cartId, productId) {
+   try {
+      const response = await fetch(`/api/carts/${cartId}/product/${productId}`, {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         }
+      });
+      return response;
+   } catch (error) {
+      throw error;
+   }
 }
-
 

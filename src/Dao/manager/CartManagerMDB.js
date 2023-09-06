@@ -60,6 +60,7 @@ export default class CartsManager {
       const carts = await this.getCartsById(idCart);
       const cart = carts.find((cart) => cart._id == idCart);
       let productInCart = cart.products;
+
       const prodIndex = productInCart.findIndex((product) => product.product._id == idProd);
 
       if (prodIndex !== -1) {
