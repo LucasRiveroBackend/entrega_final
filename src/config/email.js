@@ -48,3 +48,18 @@ export const sendInactivityNotification = async(userEmail)=>{
         `
     })
 };
+
+export const sendDeletingProduct = async(userEmail, productoDescripcion)=>{
+    const link = `http://localhost:8080/products`;
+    await transporter.sendMail({
+        from:config.gmail.emailAdmin,
+        to:userEmail,
+        subject:"Producto Eliminado",
+        html: `
+        <div>
+        <h2>Hola "${userEmail}, se ha eliminado el producto "${productoDescripcion}"</h2>
+        <p>Debe darlo de alta nuevamante</p>        
+        </div>
+        `
+    })
+};

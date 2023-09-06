@@ -14,6 +14,6 @@ router.post('/mockingproducts', addProductFaker);
 
 router.put('/:pid', updateProduct);
 
-router.delete('/:pid', isAdmin, deleteProduct);
+router.delete('/:pid', deleteProduct);
 
 export default router;

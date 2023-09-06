@@ -1,10 +1,12 @@
 import ProductManager from "../Dao/manager/productManagerMDB.js";
 import ProductModel from "../Dao/models/products.model.js";
+import userModel from "../Dao/models/user.model.js";
 import {loadProducts} from "../config/utils.js";
 import {EError} from "../infrastructure/dictionaries/errors/EError.js";
 import {CustomError} from "../services/customError.service.js";
 import {generateProductErrorInfo} from "../services/productErrorInfo.js";
 import {generateProductExternError} from "../services/productErrorExtern.js";
+import { sendDeletingProduct } from "../config/email.js"
 import { addLogger } from "../config/logger.js";
 const productManager = new ProductManager(ProductModel);
 
@@ -80,15 +82,23 @@ export const updateProduct = async (req,res)=>{
 }
 
 export const deleteProduct = async (req,res)=>{
-
    const id = req.params.pid;
    const product = await productManager.getProductById(id);
    if (product){
       const productOwer = JSON.parse(JSON.stringify(product[0].owner));
       const userId = JSON.parse(JSON.stringify(req.user._id));
       if((req.user.rol === "premium" && productOwer == userId) || req.user.rol === "admin"){
+         // busco el rol que tiene el owner de ese producto
+         const user = await userModel.findById(productOwer);
+         if (!user){
+            res.send({status:"error", message:"no existe el dueño de ese producto"})
+         }
          const resultado = await productManager.deleteProduct(id)
          if(resultado){
+            if (user.rol === 'premium'){
+               // se envia el mail avisando que se borro el producto
+               await sendDeletingProduct(user.email, product[0].title);
+            }
             return res.send({
                producto:resultado,
             })
