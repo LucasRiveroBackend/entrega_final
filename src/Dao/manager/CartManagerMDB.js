@@ -193,38 +193,40 @@ export default class CartsManager {
         }
       }
     }
-
     // si no tengo productos para agregar en el ticket envio mensaje de error
     if (totalProductInTicket == 0){
       return {
-        code: 200,
+        code: 201,
         status: 'Error',
         message: 'La cantidad de productos del ticket es igual a 0, valide por favor'
       };
     }
-
     const ticket = await this.addTicket(totalPrice, email);
 
     if (outOfStockProducts.length > 0) {
       return {
-        code: 200,
+        code: 201,
         status: 'Error',
-        message: 'Algunos productos tienen cantidad mayor al stock',
+        message: 'Algunos productos tienen cantidad mayor al stock, quedan pendientes hasta el reingreso. Se genera el ticket con productos disponibles',
         outOfStockProducts: outOfStockProducts
       };
     }
-
     return ticket;
 
   }
 
    // agrego los ticket
    addTicket = async (amount, email) => {
+    const emailSinComillas = email.replace(/"/g, '');
+    const buenosAiresTimezoneOffset = -180;
+    const now = new Date();
+    const buenosAiresTime = new Date(now.getTime() + buenosAiresTimezoneOffset * 60000);
     try {
        const id = uuidv4();
        let ticket = {
           amount: amount,
-          purchaser: email,
+          purchaser: emailSinComillas,
+          purchase_datetype: buenosAiresTime,
           code: id,
        }
 
@@ -236,6 +238,16 @@ export default class CartsManager {
        throw error;
     }
  }
+
+ getTicketByEmail = async (email) => {
+  try {
+    const result = await ticketModel.find({ purchaser: email }).lean();
+    return result;
+  } catch (error) {
+    console.error('Error en getCartsById:', error);
+    throw error;
+  }
+}
 
   write = async (cart) => {
     try {

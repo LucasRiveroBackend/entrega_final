@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { getCartById, getProducts, getUsers } from '../controllers/view.controllers.js';
+import { getCartsByIdUser, getCartById, getProducts, getUsers, getTicket } from '../controllers/view.controllers.js';
 
 const router = Router();
 
@@ -25,7 +25,10 @@ router.get("/products", privateAcces, getProducts);
 
 router.get('/register', publicAcces, (req,res)=>{res.render('register')})
 
-router.get('/login', publicAcces, (req,res)=>{res.render('login')})
+router.get('/login', publicAcces, (req,res)=>{res.render('login',{
+  user: req.session.user
+  })
+})
 
 router.get('/profile', privateAcces ,(req,res)=>{
     res.render('profile',{
@@ -43,5 +46,9 @@ router.get("/reset-password",(req,res)=>{
 });
 
 router.get("/users", adminAcces,  getUsers);
+
+router.get("/cart/:cid", getCartsByIdUser);
+
+router.get("/ticket/:uemail", getTicket);
 
 export default router;

@@ -70,8 +70,10 @@ export default class ProductManager {
           if (hasNextPage) {
              nextLink = `/products?page=${nextPage}`;
           }
+          const productosFiltrados = products.filter(producto => producto.stock > 0);
+          products = productosFiltrados
           const result = {
-              products,
+            products,
               hasPrevPage,
               hasNextPage,
               prevPage,

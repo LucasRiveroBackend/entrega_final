@@ -8,7 +8,7 @@ router.get('/', getProducts);
 
 router.get('/:pid', getProduct);
 
-router.post('/',  addProduct);
+router.post('/', isAdmin,  addProduct);
 
 router.post('/mockingproducts', addProductFaker);
 

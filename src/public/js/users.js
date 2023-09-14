@@ -14,7 +14,6 @@ function cambiarRol(userId) {
     }
   })
   .then(responseData => {
-    console.log(responseData);
     if (responseData.status === 'success') {
       Swal.fire({
         toast: true,
@@ -54,7 +53,6 @@ function eliminarUsuario(userId) {
     }
   })
   .then(responseData => {
-    console.log(responseData);
     if (responseData.status === 'success') {
       Swal.fire({
         toast: true,

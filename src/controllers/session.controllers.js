@@ -17,9 +17,9 @@ export const failregister = async (req, res) => {
 export const login = async (req, res) => {
   if (!req.user) return res.status(400).send({ status: "error", error: 'Invalid credentials' });
   const cartId = req.body.cartId;
-  const buenosAiresTimezoneOffset = -180; // GMT-3 para horario estándar (sin horario de verano)
+  const buenosAiresTimezoneOffset = -180;
   const now = new Date();
-  const buenosAiresTime = new Date(now.getTime() + buenosAiresTimezoneOffset * 60000); // Convertir a milisegundos
+  const buenosAiresTime = new Date(now.getTime() + buenosAiresTimezoneOffset * 60000);
   req.session.user = {
     id: req.user._id,
     name: req.user.firs_name,

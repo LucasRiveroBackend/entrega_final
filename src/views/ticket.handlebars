@@ -1,29 +1,50 @@
 <style>
-.green-button {
+  .green-button {
     background-color: #4CAF50;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-}
+  }
 
-.green-button:hover {
+  .green-button:hover {
     background-color: #45a049;
     padding: 10px 20px;
     border-radius: 5px;
-}
-    /* Estilo para el encabezado "Productos" */
+  }
+
+  .red-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .red-button:hover {
+    background-color: #8B0000;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+
+  /*
+  Estilo para el encabezado "Productos" */
   h1 {
     font-size: 28px;
-    color: #333; /* Cambia el color del texto según tus preferencias */
+    color: #333;
+    /*
+  Cambia el color del texto según tus preferencias */
     margin-bottom: 20px;
   }
 
-  /* Estilo para el formulario */
+  /*
+  Estilo para el formulario */
   #productsForm {
     border: 1px solid #ddd;
-    padding: 20px;
+    padding:
+      20px;
     background-color: #f9f9f9;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -34,15 +55,17 @@
     margin-bottom: 10px;
   }
 
-
   .logout-button {
-    background-color: red; /* Color rojo */
+    background-color: red;
+    /* Color rojo */
     color: white;
-    border: none;
+    border:
+      none;
     padding: 10px 20px;
     border-radius: 5px;
     float: right;
-    text-decoration: none;
+    text-decoration:
+      none;
   }
 
   .cart-button {
@@ -58,7 +81,8 @@
 
   .delete-button {
     background-color: orangered;
-    color: white;
+    color:
+      white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -68,7 +92,8 @@
   }
 
   table {
-    border-collapse: collapse;
+    border-collapse:
+      collapse;
     width: 100%;
     margin-bottom: 20px;
   }
@@ -81,7 +106,8 @@
   }
 
   th {
-    background-color: #f2f2f2;
+    background-color:
+      #f2f2f2;
   }
 
   tr:hover {
@@ -102,6 +128,43 @@
     padding: 10px 20px;
     border-radius: 5px;
   }
+
+  .cart-container {
+    margin-bottom: 20px;
+    /* Añade espacio entre cada carrito */
+  }
+
+  .cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items:
+      center;
+    margin-bottom: 10px;
+    /* Espacio entre el encabezado y la tabla */
+  }
+
+  .return-button {
+    background-color: #007bff;
+    /* Color de fondo del botón */
+    color: #fff;
+    /* Color del texto del botón */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .return-button:hover {
+    background-color: #0056b3;
+    /* Color de fondo al pasar el ratón por encima */
+  }
+
+.total-sale-and-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Alinea los elementos a los extremos */
+  padding: 10px 20px;
+}
   .turquoise-button {
     background-color:#1AAB8A;
     color: white;
@@ -109,7 +172,6 @@
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    text-decoration: none;
   }
 
   .turquoise-button:hover {
@@ -121,58 +183,26 @@
     cursor: pointer;
   }
 </style>
-<div>
-  <div>
-    <h1>Bienvenido {{user.name}}, usted tiene rol de {{user.role}}</h1>
-
-    <a href="/api/session/logout" class="logout-button">SALIR</a>
-    <a href="/cart/{{cartId}}" class="cart-button" id="goToCartButton">IR AL CARRITO</a>
-    <a href="/cart/{{cartId}}" class="delete-button">ELIMINAR CARRITO</a>
-    <a href="/ticket/{{user.email}}"  class="check-ticket-button turquoise-button" id="uEmail">CONSULTAR TICKETS</a>
-  </div>
-</div>
-<h1>Productos</h1>
-<form id="productsForm">
+<div class="cart-container">
   <table>
     <thead>
       <tr>
-        <th>Título</th>
-        <th>Descripción</th>
-        <th>Precio</th>
-        <th>Thumbnail</th>
-        <th>Código</th>
-        <th>Stock</th>
-        <th>Estado</th>
-        <th>Categoría</th>
-        <th>Acción</th>
+        <th>Email</th>
+        <th>Monto</th>
+        <th>Fecha</th>
       </tr>
     </thead>
     <tbody>
-      {{#each productos.products}}
+      {{#each tickets}}
       <tr>
-        <td>{{this.title}}</td>
-        <td>{{this.description}}</td>
-        <td>{{this.price}}</td>
-        <td>{{this.thumbnail}}</td>
-        <td>{{this.code}}</td>
-        <td>{{this.stock}}</td>
-        <td>{{this.status}}</td>
-        <td>{{this.category}}</td>
-        <td>
-          <button class="accept-button green-button" data-product-id="{{this._id}}">AGREGAR</button>
-        </td>
+        <td>{{this.purchaser}}</td>
+        <td>${{this.amount}}</td>
+        <td>{{this.purchase_datetype}}</td>
       </tr>
       {{/each}}
     </tbody>
   </table>
-</form>
-{{#if productos.hasPrevPage}}
-<a href="{{productos.prevLink}}"><button>Anterior</button></a>
-{{/if}}
-{{#if productos.hasNextPage}}
-<a href="{{productos.nextLink}}"><button>Siguiente</button></a>
-{{/if}}
+  <div >
+    <a href="/products"><button class="check-ticket-button turquoise-button">VOLVER A PRODUCTOS</button></a>
+  </div>
 </div>
-<br>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/js/carts.js"></script>

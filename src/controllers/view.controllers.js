@@ -40,3 +40,15 @@ export const getProducts = async (req, res) => {
   }
   res.render("users", { usersDto});
 };
+
+export const getCartsByIdUser = async (req, res) => {
+  const idCart = req.params.cid;
+  const carts = await cartManager.getCartsById(idCart);
+  res.render("cart",  { carts} );
+}
+
+export const getTicket = async (req, res) => {
+  const email = req.params.uemail;
+  const tickets = await cartManager.getTicketByEmail(email);
+  res.render("ticket", { tickets });
+}

@@ -36,6 +36,6 @@ router.put('/:cid/product/:pid', updateQuantity)
 
 router.put('/:cid/user/:pid', addCartInUser)
 
-router.get('/:cid/purchase', addPurchase)
+router.post('/:cid/purchase', addPurchase)
 
 export default router;

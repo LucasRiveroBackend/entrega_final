@@ -129,7 +129,7 @@ export const addCartInUser = async (req,res)=>{
 
 export const addPurchase = async (req, res)=>{
    const id = req.params.cid;
-   const { email } = req.body;
+   const email = JSON.stringify(req.session.user.email);
    if (!email) {
       const customerError = await CustomError.createError({
          name: "Product create error",
@@ -142,9 +142,14 @@ export const addPurchase = async (req, res)=>{
          error:customerError,
        })
    }
-   const ticket = await cartManager.addPurchase(id, email)
+   const ticket = await cartManager.addPurchase(id, email);
+   if (ticket.code === 201) {
+      res.status(201).json({
+         message: ticket.message
+       });
+    }
+    res.send({
+      ticket: ticket
+    });
 
-   res.send({
-     ticket: ticket
-   });
 }

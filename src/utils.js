@@ -41,7 +41,6 @@ const validFields = (body) => {
 
 //filtro para validar los campos de cargar la imagen
 const multerFilterProfile = (req,file,cb)=>{
-    console.log(req.body)
     const isValid = validFields(req.body);
     if(isValid){
         cb(null,true)
