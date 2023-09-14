@@ -112,7 +112,7 @@ describe("Test para autenticacion de usuarios y cambio de roles", () => {
    });
 
    it("Cambio rol del usuario", async function () { 
-      const responseUpdateUser = await requester.put(`/api/users/premium/${id}`).send();
+      const responseUpdateUser = await requester.post(`/api/users/premium/${id}`).send();
       expect(responseUpdateUser.statusCode).to.be.equal(200);
    });
 

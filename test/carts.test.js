@@ -65,7 +65,7 @@ describe("Test para consulta de carritos", () => {
    });
 
    it("Cambio rol del usuario", async function () { 
-      const responseUpdateUser = await requester.put(`/api/users/premium/${id}`).send();
+      const responseUpdateUser = await requester.post(`/api/users/premium/${id}`).send();
       expect(responseUpdateUser.statusCode).to.be.equal(200);
    });
 
@@ -78,7 +78,7 @@ describe("Test para consulta de carritos", () => {
    });
 
    it("Cambio rol del usuario", async function () { 
-      const responseUpdateUser = await requester.put(`/api/users/premium/${id}`).send();
+      const responseUpdateUser = await requester.post(`/api/users/premium/${id}`).send();
       expect(responseUpdateUser.statusCode).to.be.equal(200);
    });
 
