@@ -6,6 +6,7 @@
   "main": "./app.js",
   "scripts": {
     "start": "node src/app.js",
+    "dev"  : "nodemon src/app.js",
     "test1": "mocha test/sessions.test.js --timeout 10000 --exit",
     "test2": "mocha test/products.test.js --timeout 10000 --exit",
     "test3": "mocha test/carts.test.js --timeout 10000 --exit"
